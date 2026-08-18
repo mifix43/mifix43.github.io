@@ -249,7 +249,7 @@
             cursor: pointer;
             z-index: 100;
             transition: all 0.3s ease;
-            animation: peek 0.6s ease-out forwards;
+            transition-property: bottom, transform, filter;
         }
 
         @keyframes peek {
@@ -264,7 +264,7 @@
         }
 
         .mascot:hover {
-            bottom: -20px;
+            bottom: 0px;
             transform: scale(1.05);
             filter: drop-shadow(0 0 20px rgba(169, 207, 255, 0.5));
         }
