@@ -3,26 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>MIFIX — Ratings</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             min-height: 100vh;
             color: #F5F7FA;
-
             background:
-                linear-gradient(
-                    rgba(48, 58, 80, 0.8),
-                    rgba(48, 58, 80, 0.8)
-                ),
+                linear-gradient(rgba(48, 58, 80, 0.8), rgba(48, 58, 80, 0.8)),
                 url('https://i.pinimg.com/originals/59/b2/34/59b2349684d902730f710b65f05ecb80.gif');
-
             background-size: cover;
             background-attachment: fixed;
             background-position: center;
@@ -76,8 +68,6 @@
             color: #A9CFFF;
         }
 
-        /* Tabs */
-
         .tabs {
             display: flex;
             justify-content: center;
@@ -98,24 +88,18 @@
             transition: all 0.2s;
         }
 
-        .tab-button:hover {
-            background: rgba(169, 207, 255, 0.2);
-        }
+        .tab-button:hover { background: rgba(169, 207, 255, 0.2); }
 
         .tab-button.active {
             background: rgba(169, 207, 255, 0.4);
             border-color: rgba(169, 207, 255, 0.8);
         }
 
-        /* Main container */
-
         .container {
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
         }
-
-        /* Controls */
 
         .controls {
             display: flex;
@@ -142,93 +126,63 @@
             border-color: rgba(169, 207, 255, 0.6);
         }
 
-        /* Lists */
-
-        .games,
-        .movies {
+        .games, .movies {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        /* Game / Movie cards */
-
-        .game,
-        .movie {
+        .game, .movie {
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 20px;
-
             padding: 15px;
-
             background: rgba(8, 11, 16, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-
-            transition:
-                transform 0.2s,
-                border-color 0.2s,
-                box-shadow 0.2s;
-
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
             animation: slideIn 0.4s ease-out;
         }
 
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .game:hover,
-        .movie:hover {
+        .game:hover, .movie:hover {
             transform: translateY(-4px);
             border-color: rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 24px rgba(42, 123, 155, 0.4);
         }
 
-        /* Information */
-
-        .game-info,
-        .movie-info {
+        .game-info, .movie-info {
             display: flex;
             align-items: center;
             gap: 18px;
+            min-width: 0;
         }
 
-        .game-image,
-        .movie-image {
+        .game-image, .movie-image {
             width: 100px;
             height: 130px;
-
+            flex: 0 0 100px;
             object-fit: cover;
-
             border-radius: 8px;
             background: #202936;
         }
 
-        .game-name,
-        .movie-name {
+        .game-name, .movie-name {
             color: #F5F7FA;
             font-size: 21px;
             font-weight: 700;
         }
 
-        /* Steam link */
-
         .steam {
             display: block;
             margin-top: 8px;
-
             color: #A9CFFF;
             text-decoration: none;
-
             font-size: 14px;
             font-weight: 700;
         }
@@ -238,21 +192,14 @@
             text-decoration: underline;
         }
 
-        /* Numeric rating */
-
         .rating {
             color: #F5F7FA;
             font-size: 35px;
             font-weight: 700;
             white-space: nowrap;
-
             padding: 10px 16px;
             border-radius: 8px;
-
-            transition:
-                box-shadow 0.2s,
-                background 0.2s,
-                transform 0.2s;
+            transition: box-shadow 0.2s, background 0.2s, transform 0.2s;
         }
 
         .rating span {
@@ -262,198 +209,117 @@
         }
 
         .rating.green {
-            background: linear-gradient(
-                135deg,
-                #66BB6A,
-                #4CAF50
-            );
-
-            box-shadow:
-                0 0 12px rgba(76, 175, 80, 0.3);
+            background: linear-gradient(135deg, #66BB6A, #4CAF50);
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
         }
 
         .rating.green:hover {
-            box-shadow:
-                0 0 20px rgba(76, 175, 80, 0.5);
-
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
             transform: scale(1.05);
         }
 
         .rating.yellow {
-            background: linear-gradient(
-                135deg,
-                #FDD835,
-                #FBC02D
-            );
-
-            box-shadow:
-                0 0 12px rgba(251, 192, 45, 0.3);
-
+            background: linear-gradient(135deg, #FDD835, #FBC02D);
+            box-shadow: 0 0 12px rgba(251, 192, 45, 0.3);
             color: #000;
         }
 
         .rating.yellow:hover {
-            box-shadow:
-                0 0 20px rgba(251, 192, 45, 0.5);
-
+            box-shadow: 0 0 20px rgba(251, 192, 45, 0.5);
             transform: scale(1.05);
         }
 
-        .rating.yellow span {
-            color: #000;
-        }
+        .rating.yellow span { color: #000; }
 
         .rating.red {
-            background: linear-gradient(
-                135deg,
-                #EF5350,
-                #E53935
-            );
-
-            box-shadow:
-                0 0 12px rgba(229, 57, 53, 0.3);
+            background: linear-gradient(135deg, #EF5350, #E53935);
+            box-shadow: 0 0 12px rgba(229, 57, 53, 0.3);
         }
 
         .rating.red:hover {
-            box-shadow:
-                0 0 20px rgba(229, 57, 53, 0.5);
-
+            box-shadow: 0 0 20px rgba(229, 57, 53, 0.5);
             transform: scale(1.05);
         }
 
-        /* Loading */
-
         .loading {
             padding: 40px 20px;
-
             text-align: center;
-
             color: #D8DEE7;
-
             background: rgba(8, 11, 16, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-
             font-weight: 700;
         }
 
         .spinner {
             display: inline-block;
-
             width: 30px;
             height: 30px;
-
             border: 3px solid rgba(169, 207, 255, 0.2);
             border-top-color: #A9CFFF;
-
             border-radius: 50%;
-
             animation: spin 0.8s linear infinite;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Empty state */
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .empty {
             padding: 70px 20px;
-
             text-align: center;
-
             color: #D8DEE7;
-
             background: rgba(8, 11, 16, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-
             font-weight: 700;
         }
-
-        /* Footer */
 
         footer {
             padding: 30px;
-
             text-align: center;
-
             color: #D8DEE7;
-
             font-weight: 700;
         }
 
-        /* Mascot */
-
         .mascot {
             position: fixed;
-
             bottom: -40px;
             right: 20px;
-
             width: 200px;
             height: 200px;
-
             cursor: pointer;
-
             z-index: 100;
-
             transition: all 0.3s ease;
         }
 
         .mascot:hover {
             bottom: 0;
-
             transform: scale(1.05);
-
-            filter:
-                drop-shadow(
-                    0 0 20px rgba(169, 207, 255, 0.5)
-                );
+            filter: drop-shadow(0 0 20px rgba(169, 207, 255, 0.5));
         }
 
         .mascot img {
             width: 100%;
             height: 100%;
-
             object-fit: contain;
         }
 
-        /* Tabs content */
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Mobile */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
 
         @media (max-width: 600px) {
-
-            .game,
-            .movie {
+            .game, .movie {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .game-info,
-            .movie-info {
-                width: 100%;
-            }
+            .game-info, .movie-info { width: 100%; }
 
-            .rating {
-                align-self: flex-end;
-            }
+            .rating { align-self: flex-end; }
 
-            .game-image,
-            .movie-image {
+            .game-image, .movie-image {
                 width: 80px;
                 height: 105px;
+                flex-basis: 80px;
             }
 
             .controls {
@@ -461,9 +327,7 @@
                 align-items: stretch;
             }
 
-            .sort-button {
-                width: 100%;
-            }
+            .sort-button { width: 100%; }
 
             .mascot {
                 width: 140px;
@@ -471,140 +335,76 @@
                 right: 10px;
             }
 
-            .tabs {
-                flex-wrap: wrap;
-            }
+            .tabs { flex-wrap: wrap; }
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <h1>MIFIX — Ratings</h1>
 
-<header>
-    <h1>MIFIX — Ratings</h1>
+        <div class="header-subtitle">
+            <button class="tab-subtitle" id="subtitleBtn">
+                Мой личный рейтинг игр
+            </button>
 
-    <div class="header-subtitle">
-        <button
-            class="tab-subtitle"
-            id="subtitleBtn"
-        >
-            Мой личный рейтинг игр
+            <span class="game-count" id="counter">
+                0 игр
+            </span>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-button active" data-tab="games">
+            🎮 Games
         </button>
 
-        <span
-            class="game-count"
-            id="counter"
-        >
-            0 игр
-        </span>
+        <button class="tab-button" data-tab="movies">
+            🎬 Movies
+        </button>
     </div>
-</header>
 
-<div class="tabs">
+    <main class="container">
+        <div class="tab-content active" id="games-tab">
+            <div class="controls" id="controls" style="display: none;">
+                <button class="sort-button" id="sortBtn">
+                    Сортировка: по рейтингу ⬇️
+                </button>
+            </div>
 
-    <button
-        class="tab-button active"
-        data-tab="games"
-    >
-        🎮 Games
-    </button>
-
-    <button
-        class="tab-button"
-        data-tab="movies"
-    >
-        🎬 Movies
-    </button>
-
-</div>
-
-<main class="container">
-
-    <!-- Games -->
-
-    <div
-        class="tab-content active"
-        id="games-tab"
-    >
-
-        <div
-            class="controls"
-            id="controls"
-            style="display: none;"
-        >
-
-            <button
-                class="sort-button"
-                id="sortBtn"
-            >
-                Сортировка: по рейтингу ⬇️
-            </button>
-
+            <div class="games" id="games"></div>
         </div>
 
-        <div
-            class="games"
-            id="games"
-        ></div>
+        <div class="tab-content" id="movies-tab">
+            <div class="controls" id="movies-controls" style="display: none;">
+                <button class="sort-button" id="movies-sortBtn">
+                    Сортировка: по рейтингу ⬇️
+                </button>
+            </div>
 
-    </div>
-
-
-    <!-- Movies -->
-
-    <div
-        class="tab-content"
-        id="movies-tab"
-    >
-
-        <div
-            class="controls"
-            id="movies-controls"
-            style="display: none;"
-        >
-
-            <button
-                class="sort-button"
-                id="movies-sortBtn"
-            >
-                Сортировка: по рейтингу ⬇️
-            </button>
-
+            <div class="movies" id="movies"></div>
         </div>
+    </main>
 
-        <div
-            class="movies"
-            id="movies"
-        ></div>
+    <footer>
+        © 2026 MIFIX
+    </footer>
 
-    </div>
-
-</main>
-
-
-<footer>
-    © 2026 MIFIX
-</footer>
-
-
-<a
-    href="https://t.me/m1fixpixel"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="mascot"
-    title="Перейти в Telegram"
->
-
-    <img
-        src="https://i.imgur.gg/ols7ZDd-image-removebg-preview.png"
-        alt="MIFIX Mascot"
-        onerror="this.style.display='none'"
+    <a
+        href="https://t.me/m1fixpixel"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mascot"
+        title="Перейти в Telegram"
     >
+        <img
+            src="https://i.imgur.gg/ols7ZDd-image-removebg-preview.png"
+            alt="MIFIX Mascot"
+            onerror="this.style.display='none'"
+        >
+    </a>
 
-</a>
-
-
-<script src="app.js"></script>
-
+    <script src="app.js"></script>
 </body>
 </html>
