@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8" />
-<title>Оценка игр</title>
-<style>
-  .game {
-    margin-bottom: 20px;
-  }
-  .stars {
-    cursor: pointer;
-  }
-</style>
-</head>
-<body>
-
-<div id="games-container"></div>
-
-<script>
-// Исходные данные из games.json
-const games = [
+[
     {
         "name": "Night in the Woods",
         "rating": 10,
@@ -37,50 +17,4 @@ const games = [
         "steam": "https://store.steampowered.com/app/646910/The_Crew_2/",
         "image": "images/gonka.jpg"
     }
-];
-
-// Функция для отображения игр
-function renderGames() {
-  const container = document.getElementById('games-container');
-  container.innerHTML = '';
-  games.forEach((game, index) => {
-    const gameDiv = document.createElement('div');
-    gameDiv.className = 'game';
-
-    gameDiv.innerHTML = `
-      <h3>${game.name}</h3>
-      <img src="${game.image}" alt="${game.name}" width="200" />
-      <p>Оценка: 
-        <span class="stars" data-index="${index}">${'★'.repeat(game.rating)}${'☆'.repeat(10 - game.rating)}</span>
-      </p>
-      <a href="${game.steam}" target="_blank">Steam</a>
-    `;
-    container.appendChild(gameDiv);
-  });
-
-  // Назначить обработчики кликов по звездочкам
-  document.querySelectorAll('.stars').forEach(starSpan => {
-    starSpan.addEventListener('click', (e) => {
-      const gameIndex = e.target.getAttribute('data-index');
-      const rating = prompt('Введите оценку от 1 до 10', games[gameIndex].rating);
-      const newRating = parseInt(rating);
-      if (newRating >= 1 && newRating <= 10) {
-        games[gameIndex].rating = newRating;
-        // Здесь нужно сохранить изменения в файл games.json
-        // В браузере это сделать невозможно напрямую, это делается на сервере
-        // Для демонстрации просто перерисуем
-        renderGames();
-        alert('Оценка сохранена (локально, без сохранения в файл)');
-      } else {
-        alert('Некорректная оценка');
-      }
-    });
-  });
-}
-
-// Инициализация
-renderGames();
-</script>
-
-</body>
-</html>
+]
