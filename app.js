@@ -100,7 +100,6 @@ function switchTab(tabName) {
 }
 
 // Rating color
-function getRatingColor(rating) {
     if (rating >= 7.5) return 'green';
     if (rating >= 5) return 'yellow';
     return 'red';
@@ -162,7 +161,6 @@ function renderGames(games) {
     }
 
     gamesContainer.innerHTML = games.map((game, index) => {
-        const ratingColor = getRatingColor(game.rating);
         const safeImage = sanitizeUrl(game.image);
         const safeSteam = sanitizeUrl(game.steam);
         return `
@@ -182,9 +180,7 @@ function renderGames(games) {
                         ` : ''}
                     </div>
                 </div>
-                <div class="rating ${ratingColor}">
-                    ${escapeHtml(game.rating)}
-                    <span>/10</span>
+                
                 </div>
             </article>
         `;
@@ -271,7 +267,6 @@ function renderMovies(movies) {
     }
 
     moviesContainer.innerHTML = movies.map((movie, index) => {
-        const ratingColor = getRatingColor(movie.rating);
         const safeImage = sanitizeUrl(movie.image);
         return `
             <article class="movie" data-index="${index}">
@@ -285,9 +280,7 @@ function renderMovies(movies) {
                         <div class="movie-name">${escapeHtml(movie.name)}</div>
                     </div>
                 </div>
-                <div class="rating ${ratingColor}">
-                    ${escapeHtml(movie.rating)}
-                    <span>/10</span>
+                
                 </div>
             </article>
         `;
@@ -315,29 +308,6 @@ function openReview(itemName, type) {
         overall: 0,
         hours: 0,
         recommendation: null
-    };
-
-    modalTitle.textContent = itemName;
-    
-    // Render star ratings
-    renderStarRating('graphicsRating', review.graphics);
-    renderStarRating('storyRating', review.story);
-    renderStarRating('musicRating', review.music);
-    renderStarRating('gameplayRating', review.gameplay);
-    renderStarRating('overallRating', review.overall);
-    
-    // Hours
-    document.getElementById('hoursValue').textContent = review.hours;
-    
-    // Recommendation
-    const recommendBtn = document.getElementById('recommendBtn');
-    const notRecommendBtn = document.getElementById('notRecommendBtn');
-    
-    recommendBtn.classList.remove('recommended');
-    notRecommendBtn.classList.remove('not-recommended');
-    
-    if (review.recommendation === 'recommend') {
-        recommendBtn.classList.add('recommended');
     } else if (review.recommendation === 'not-recommend') {
         notRecommendBtn.classList.add('not-recommended');
     }
@@ -348,34 +318,23 @@ function openReview(itemName, type) {
     modal.classList.add('open');
 }
 
-function renderStarRating(elementId, rating) {
     const element = document.getElementById(elementId);
     const starsContainer = element.querySelector('.stars');
     starsContainer.innerHTML = '';
     
-    for (let i = 1; i <= 5; i++) {
-        const star = document.createElement('span');
-        star.className = `star ${i <= rating ? 'filled' : 'empty'}`;
-        star.textContent = '★';
-        star.onclick = (e) => {
-            e.stopPropagation();
-            setStarRating(elementId, i);
-        };
+    for (let i = 1; i <= 5; i++) {;
         starsContainer.appendChild(star);
     }
     
-    const valueSpan = element.querySelector('.rating-value');
     if (valueSpan) valueSpan.remove();
     
     if (rating > 0) {
         const valueSpan = document.createElement('span');
-        valueSpan.className = 'rating-value';
         valueSpan.textContent = `${rating}/5`;
         element.appendChild(valueSpan);
     }
 }
 
-function setStarRating(elementId, rating) {
     const categoryMap = {
         'graphicsRating': 'graphics',
         'storyRating': 'story',
@@ -401,7 +360,6 @@ function setStarRating(elementId, rating) {
     
     reviews[reviewKey][category] = rating;
     saveReviews();
-    renderStarRating(elementId, rating);
 }
 
 function setRecommendation(type) {
