@@ -17,10 +17,7 @@
 
             color: #F5F7FA;
 
-            background: #303a50; /* changed to requested color */
-
-            /* Сделать весь текст жирным */
-            font-weight: 700;
+            background: #303a50;
         }
 
         header {
@@ -33,7 +30,6 @@
             margin: 0;
             color: #F5F7FA;
             font-size: 32px;
-            font-weight: 700;
         }
 
         .header-subtitle {
@@ -43,7 +39,6 @@
             gap: 10px;
             margin-top: 10px;
             color: #D8DEE7;
-            font-weight: 700;
         }
 
         .game-count {
@@ -52,7 +47,7 @@
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 500;
             color: #A9CFFF;
         }
 
@@ -305,7 +300,7 @@
     const sortBtn = document.getElementById("sortBtn");
 
     let gamesData = [];
-    let isSorted = false;
+    let sortOrder = null; // null | 'desc' | 'asc'
 
     function renderGames(games) {
         gamesContainer.innerHTML = games.map(game => `
@@ -367,16 +362,19 @@
     }
 
     function toggleSort() {
-        isSorted = !isSorted;
-        const sorted = isSorted 
-            ? [...gamesData].sort((a, b) => b.rating - a.rating)
-            : gamesData;
-        
-        sortBtn.textContent = isSorted 
-            ? 'Сортировка: по рейтингу ⬇️' 
-            : 'Сортировка: оригинальный порядок';
-        
-        renderGames(sorted);
+        if (sortOrder === 'desc') {
+            // switch to ascending
+            sortOrder = 'asc';
+            const sorted = [...gamesData].sort((a, b) => a.rating - b.rating);
+            sortBtn.textContent = 'Сортировка: по рейтингу ⬆️';
+            renderGames(sorted);
+        } else {
+            // switch to descending
+            sortOrder = 'desc';
+            const sorted = [...gamesData].sort((a, b) => b.rating - a.rating);
+            sortBtn.textContent = 'Сортировка: по рейтингу ⬇️';
+            renderGames(sorted);
+        }
     }
 
     // Показать загрузку
