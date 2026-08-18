@@ -19,18 +19,19 @@
         }
 
         header {
-            padding: 25px;
+            padding: 30px 20px;
             text-align: center;
             border-bottom: 1px solid #222b38;
         }
 
         header h1 {
             margin: 0;
-            font-size: 30px;
+            font-size: 32px;
         }
 
         header p {
             color: #8995a5;
+            margin-top: 10px;
         }
 
         .container {
@@ -39,15 +40,23 @@
             padding: 0 20px;
         }
 
+        .games {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
         .game {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             background: #121923;
             border: 1px solid #283342;
             border-radius: 12px;
+
             padding: 15px;
-            margin-bottom: 15px;
+
             transition: 0.2s;
         }
 
@@ -65,8 +74,11 @@
         .game-image {
             width: 100px;
             height: 130px;
+
             object-fit: cover;
+
             border-radius: 8px;
+
             background: #202936;
         }
 
@@ -76,11 +88,14 @@
         }
 
         .steam {
+            display: block;
+
+            margin-top: 8px;
+
             color: #66a3ff;
             text-decoration: none;
+
             font-size: 14px;
-            display: block;
-            margin-top: 7px;
         }
 
         .steam:hover {
@@ -94,91 +109,41 @@
         }
 
         .rating span {
-            font-size: 15px;
             color: #788595;
-        }
-
-        .admin {
-            background: #121923;
-            border: 1px solid #283342;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .admin h2 {
-            margin-top: 0;
-        }
-
-        input,
-        select,
-        button {
-            padding: 11px;
-            border-radius: 7px;
-            border: 1px solid #354154;
-            margin: 5px;
-        }
-
-        input,
-        select {
-            background: #080b10;
-            color: white;
-        }
-
-        input[type="file"] {
-            width: auto;
-            cursor: pointer;
-        }
-
-        button {
-            background: #2774d8;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #3985e8;
-        }
-
-        #adminPanel {
-            display: none;
-        }
-
-        .login {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        .preview {
-            display: none;
-            margin: 10px 5px;
-        }
-
-        .preview img {
-            width: 100px;
-            height: 130px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #354154;
+            font-size: 15px;
+            font-weight: normal;
         }
 
         .empty {
             text-align: center;
+
             color: #657184;
-            padding: 50px;
+
+            padding: 70px 20px;
+
+            background: #121923;
+
+            border: 1px solid #283342;
+            border-radius: 12px;
         }
 
         footer {
             text-align: center;
+
             color: #657184;
+
             padding: 30px;
         }
 
+
+        /* Телефон */
+
         @media (max-width: 600px) {
+
             .game {
                 flex-direction: column;
                 align-items: flex-start;
+
                 gap: 15px;
             }
 
@@ -195,483 +160,201 @@
                 height: 105px;
             }
         }
+
     </style>
 </head>
 
+
 <body>
+
 
 <header>
 
-    <h1>MIFIX — Steam Ratings</h1>
+    <h1>
+        MIFIX — Steam Ratings
+    </h1>
 
-    <p>Мой личный рейтинг игр</p>
+    <p>
+        Мой личный рейтинг игр
+    </p>
 
 </header>
 
 
 <div class="container">
 
-    <!-- АДМИН-ПАНЕЛЬ -->
-
-    <div class="admin">
-
-        <h2>🔐 Вход владельца</h2>
-
-        <div class="login">
-
-            <input
-                type="password"
-                id="password"
-                placeholder="Пароль"
-            >
-
-            <button onclick="login()">
-                Войти
-            </button>
-
-        </div>
-
-
-        <div id="adminPanel">
-
-            <h2>🎮 Добавить игру</h2>
-
-            <input
-                type="text"
-                id="gameName"
-                placeholder="Название игры"
-            >
-
-            <input
-                type="text"
-                id="steamLink"
-                placeholder="Ссылка на Steam"
-            >
-
-            <select id="gameRating">
-
-                <option value="1">1/10</option>
-                <option value="2">2/10</option>
-                <option value="3">3/10</option>
-                <option value="4">4/10</option>
-                <option value="5">5/10</option>
-                <option value="6">6/10</option>
-                <option value="7">7/10</option>
-                <option value="8">8/10</option>
-                <option value="9">9/10</option>
-                <option value="10">10/10</option>
-
-            </select>
-
-
-            <!-- КАРТИНКА ИГРЫ -->
-
-            <input
-                type="file"
-                id="gameImage"
-                accept="image/*"
-                onchange="previewImage()"
-            >
-
-
-            <!-- ПРЕДПРОСМОТР -->
-
-            <div
-                class="preview"
-                id="imagePreview"
-            >
-
-                <img
-                    id="preview"
-                    src=""
-                    alt="Предпросмотр"
-                >
-
-            </div>
-
-
-            <br>
-
-
-            <button onclick="addGame()">
-                Добавить игру
-            </button>
-
-
-            <button onclick="logout()">
-                Выйти
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <!-- СПИСОК ИГР -->
-
-    <div id="games"></div>
+    <div
+        class="games"
+        id="games"
+    ></div>
 
 </div>
 
 
 <footer>
+
     © 2026 MIFIX
+
 </footer>
 
 
 <script>
 
-    // =================================
-    // ПАРОЛЬ АДМИНИСТРАТОРА
-    // =================================
+    /*
+        Загружаем игры из games.json
+    */
 
-    const ADMIN_PASSWORD = "mifix123";
+    fetch("games.json")
 
+        .then(response => {
 
-    // =================================
-    // ЗАГРУЗКА ИГР
-    // =================================
+            if (!response.ok) {
+                throw new Error("Не удалось загрузить games.json");
+            }
 
-    let games =
-        JSON.parse(
-            localStorage.getItem("mifixGames")
-        ) || [];
+            return response.json();
 
+        })
 
-    // =================================
-    // ОТОБРАЖЕНИЕ ИГР
-    // =================================
+        .then(games => {
 
-    function renderGames() {
-
-        const container =
-            document.getElementById("games");
-
-        container.innerHTML = "";
+            const container =
+                document.getElementById("games");
 
 
-        if (games.length === 0) {
+            /*
+                Если игр нет
+            */
 
-            container.innerHTML = `
-                <div class="empty">
-                    Пока здесь нет игр 🎮
-                </div>
-            `;
+            if (
+                !games ||
+                games.length === 0
+            ) {
 
-            return;
-        }
+                container.innerHTML = `
 
+                    <div class="empty">
 
-        games.forEach((game) => {
-
-            const element =
-                document.createElement("div");
-
-            element.className = "game";
-
-
-            element.innerHTML = `
-
-                <div class="game-info">
-
-                    ${
-                        game.image
-                        ?
-                        `
-                        <img
-                            class="game-image"
-                            src="${game.image}"
-                            alt="${game.name}"
-                        >
-                        `
-                        :
-                        `
-                        <div class="game-image"></div>
-                        `
-                    }
-
-                    <div>
-
-                        <div class="game-name">
-                            ${game.name}
-                        </div>
-
-                        ${
-                            game.link
-                            ?
-                            `
-                            <a
-                                class="steam"
-                                href="${game.link}"
-                                target="_blank"
-                                rel="noopener"
-                            >
-                                Открыть в Steam ↗
-                            </a>
-                            `
-                            :
-                            ""
-                        }
+                        Пока игр нет 🎮
 
                     </div>
 
-                </div>
+                `;
+
+                return;
+            }
 
 
-                <div class="rating">
+            /*
+                Создаём карточки игр
+            */
 
-                    ${game.rating}
+            games.forEach(game => {
 
-                    <span>/10</span>
+                const element =
+                    document.createElement("div");
+
+
+                element.className = "game";
+
+
+                element.innerHTML = `
+
+                    <div class="game-info">
+
+
+                        ${
+                            game.image
+                            ?
+                            `
+                            <img
+                                class="game-image"
+                                src="${game.image}"
+                                alt="${game.name}"
+                            >
+                            `
+                            :
+                            `
+                            <div
+                                class="game-image"
+                            ></div>
+                            `
+                        }
+
+
+                        <div>
+
+                            <div class="game-name">
+
+                                ${game.name}
+
+                            </div>
+
+
+                            ${
+                                game.steam
+                                ?
+                                `
+                                <a
+                                    class="steam"
+                                    href="${game.steam}"
+                                    target="_blank"
+                                    rel="noopener"
+                                >
+                                    Открыть в Steam ↗
+                                </a>
+                                `
+                                :
+                                ""
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="rating">
+
+                        ${game.rating}
+
+                        <span>
+                            /10
+                        </span>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(element);
+
+            });
+
+        })
+
+
+        /*
+            Если произошла ошибка
+        */
+
+        .catch(error => {
+
+            console.error(error);
+
+            document.getElementById("games").innerHTML = `
+
+                <div class="empty">
+
+                    Не удалось загрузить список игр.
 
                 </div>
 
             `;
 
-
-            container.appendChild(element);
-
         });
-
-    }
-
-
-    // =================================
-    // ВХОД АДМИНИСТРАТОРА
-    // =================================
-
-    function login() {
-
-        const password =
-            document.getElementById(
-                "password"
-            ).value;
-
-
-        if (password === ADMIN_PASSWORD) {
-
-            document.getElementById(
-                "adminPanel"
-            ).style.display = "block";
-
-
-            alert(
-                "Добро пожаловать, MIFIX!"
-            );
-
-        } else {
-
-            alert(
-                "Неверный пароль!"
-            );
-
-        }
-
-    }
-
-
-    // =================================
-    // ВЫХОД
-    // =================================
-
-    function logout() {
-
-        document.getElementById(
-            "adminPanel"
-        ).style.display = "none";
-
-    }
-
-
-    // =================================
-    // ПРЕДПРОСМОТР КАРТИНКИ
-    // =================================
-
-    function previewImage() {
-
-        const file =
-            document.getElementById(
-                "gameImage"
-            ).files[0];
-
-
-        if (!file) {
-            return;
-        }
-
-
-        const reader =
-            new FileReader();
-
-
-        reader.onload = function(event) {
-
-            document.getElementById(
-                "preview"
-            ).src = event.target.result;
-
-
-            document.getElementById(
-                "imagePreview"
-            ).style.display = "block";
-
-        };
-
-
-        reader.readAsDataURL(file);
-
-    }
-
-
-    // =================================
-    // ДОБАВЛЕНИЕ ИГРЫ
-    // =================================
-
-    function addGame() {
-
-        const name =
-            document.getElementById(
-                "gameName"
-            ).value.trim();
-
-
-        const link =
-            document.getElementById(
-                "steamLink"
-            ).value.trim();
-
-
-        const rating =
-            Number(
-                document.getElementById(
-                    "gameRating"
-                ).value
-            );
-
-
-        const imageFile =
-            document.getElementById(
-                "gameImage"
-            ).files[0];
-
-
-        if (!name) {
-
-            alert(
-                "Введите название игры!"
-            );
-
-            return;
-        }
-
-
-        // Если картинка выбрана
-
-        if (imageFile) {
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload = function(event) {
-
-                saveGame(
-                    name,
-                    link,
-                    rating,
-                    event.target.result
-                );
-
-            };
-
-
-            reader.readAsDataURL(
-                imageFile
-            );
-
-        } else {
-
-            saveGame(
-                name,
-                link,
-                rating,
-                ""
-            );
-
-        }
-
-    }
-
-
-    // =================================
-    // СОХРАНЕНИЕ ИГРЫ
-    // =================================
-
-    function saveGame(
-        name,
-        link,
-        rating,
-        image
-    ) {
-
-        games.push({
-
-            name: name,
-
-            link: link,
-
-            rating: rating,
-
-            image: image
-
-        });
-
-
-        localStorage.setItem(
-            "mifixGames",
-            JSON.stringify(games)
-        );
-
-
-        renderGames();
-
-
-        // Очищаем поля
-
-        document.getElementById(
-            "gameName"
-        ).value = "";
-
-
-        document.getElementById(
-            "steamLink"
-        ).value = "";
-
-
-        document.getElementById(
-            "gameImage"
-        ).value = "";
-
-
-        document.getElementById(
-            "imagePreview"
-        ).style.display = "none";
-
-
-        alert(
-            "Игра успешно добавлена! 🎮"
-        );
-
-    }
-
-
-    // =================================
-    // ЗАПУСК
-    // =================================
-
-    renderGames();
 
 </script>
+
 
 </body>
 </html>
