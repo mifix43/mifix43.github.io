@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MIFIX — Steam Ratings</title>
 
     <style>
@@ -12,24 +13,34 @@
 
         body {
             margin: 0;
-            background: #080b10;
-            color: #fff;
+            min-height: 100vh;
+
+            color: #F5F7FA;
+
+            background: #2A7B9B;
+            background: linear-gradient(
+                90deg,
+                rgba(42, 123, 155, 1) 0%,
+                rgba(87, 199, 133, 1) 50%,
+                rgba(237, 221, 83, 1) 100%
+            );
         }
 
         header {
             padding: 30px 20px;
             text-align: center;
-            border-bottom: 1px solid #222b38;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         header h1 {
             margin: 0;
+            color: #F5F7FA;
             font-size: 32px;
         }
 
         header p {
             margin-top: 10px;
-            color: #8995a5;
+            color: #D8DEE7;
         }
 
         .container {
@@ -52,16 +63,18 @@
 
             padding: 15px;
 
-            background: #121923;
-            border: 1px solid #283342;
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
 
-            transition: transform 0.2s, border-color 0.2s;
+            transition:
+                transform 0.2s,
+                border-color 0.2s;
         }
 
         .game:hover {
             transform: translateY(-2px);
-            border-color: #3d5068;
+            border-color: rgba(255, 255, 255, 0.4);
         }
 
         .game-info {
@@ -73,57 +86,71 @@
         .game-image {
             width: 100px;
             height: 130px;
+
             object-fit: cover;
+
             border-radius: 8px;
+
             background: #202936;
         }
 
         .game-name {
+            color: #F5F7FA;
             font-size: 21px;
             font-weight: bold;
         }
 
         .steam {
             display: block;
+
             margin-top: 8px;
-            color: #66a3ff;
+
+            color: #A9CFFF;
             text-decoration: none;
+
             font-size: 14px;
         }
 
         .steam:hover {
+            color: #C5DEFF;
             text-decoration: underline;
         }
 
         .rating {
+            color: #F5F7FA;
             font-size: 35px;
             font-weight: bold;
             white-space: nowrap;
         }
 
         .rating span {
-            color: #788595;
+            color: #B8C1CC;
             font-size: 15px;
             font-weight: normal;
         }
 
         .empty {
             padding: 70px 20px;
-            text-align: center;
-            color: #657184;
 
-            background: #121923;
-            border: 1px solid #283342;
+            text-align: center;
+
+            color: #D8DEE7;
+
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
         }
 
         footer {
             padding: 30px;
+
             text-align: center;
-            color: #657184;
+
+            color: #D8DEE7;
         }
 
         @media (max-width: 600px) {
+
             .game {
                 flex-direction: column;
                 align-items: flex-start;
@@ -164,7 +191,13 @@
     const gamesContainer = document.getElementById("games");
 
     fetch("games.json")
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Не удалось загрузить games.json");
+            }
+
+            return response.json();
+        })
         .then(games => {
             if (!games.length) {
                 gamesContainer.innerHTML = `
@@ -172,38 +205,65 @@
                         Пока игр нет 🎮
                     </div>
                 `;
+
                 return;
             }
 
             gamesContainer.innerHTML = games.map(game => `
                 <article class="game">
+
                     <div class="game-info">
+
                         ${
                             game.image
-                                ? `<img class="game-image" src="${game.image}" alt="${game.name}">`
-                                : `<div class="game-image"></div>`
+                                ? `
+                                    <img
+                                        class="game-image"
+                                        src="${game.image}"
+                                        alt="${game.name}"
+                                    >
+                                `
+                                : `
+                                    <div class="game-image"></div>
+                                `
                         }
 
                         <div>
-                            <div class="game-name">${game.name}</div>
+
+                            <div class="game-name">
+                                ${game.name}
+                            </div>
 
                             ${
                                 game.steam
-                                    ? `<a class="steam" href="${game.steam}" target="_blank" rel="noopener">
-                                        Открыть в Steam ↗
-                                    </a>`
+                                    ? `
+                                        <a
+                                            class="steam"
+                                            href="${game.steam}"
+                                            target="_blank"
+                                            rel="noopener"
+                                        >
+                                            Открыть в Steam ↗
+                                        </a>
+                                    `
                                     : ""
                             }
+
                         </div>
+
                     </div>
 
                     <div class="rating">
-                        ${game.rating}<span>/10</span>
+                        ${game.rating}
+                        <span>/10</span>
                     </div>
+
                 </article>
             `).join("");
         })
-        .catch(() => {
+        .catch(error => {
+            console.error(error);
+
             gamesContainer.innerHTML = `
                 <div class="empty">
                     Не удалось загрузить список игр.
