@@ -10,5 +10,11 @@
         "rating": 9,
         "steam": "https://store.steampowered.com/app/381210/Dead_by_Daylight/",
         "image": "images/dead-by-daylight.jpg"
+    },
+    {
+        "name": "The Crew 2",
+        "rating": 1,
+        "steam": "",
+        "image": "https://upload.wikimedia.org/wikipedia/en/2/2b/The_Crew_2_box_art.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original"
     }
 ]
