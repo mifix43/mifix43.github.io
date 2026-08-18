@@ -6,34 +6,16 @@
 
     <title>MIFIX — Steam Ratings</title>
 
-    <!-- Подключаем мягкий, читабельный шрифт Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        :root {
-            --text: #E8F3F8;        /* основной светлый текст, мягче, чем раньше */
-            --muted: #C7D6E0;       /* приглушённый текст */
-            --accent: #A9CFFF;      /* акцентный цвет (синий) */
-            --card-bg: rgba(8, 11, 16, 0.88);
-            --glass: rgba(255, 255, 255, 0.15);
-        }
-
         * {
             box-sizing: border-box;
-        }
-
-        html, body {
-            height: 100%;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
         body {
             margin: 0;
             min-height: 100vh;
 
-            color: var(--text);
+            color: #F5F7FA;
 
             background: #2A7B9B;
             background: linear-gradient(
@@ -47,14 +29,13 @@
         header {
             padding: 30px 20px;
             text-align: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         header h1 {
             margin: 0;
-            color: var(--text);
+            color: #F5F7FA;
             font-size: 32px;
-            font-weight: 600;
         }
 
         .header-subtitle {
@@ -63,18 +44,17 @@
             justify-content: center;
             gap: 10px;
             margin-top: 10px;
-            color: var(--muted);
-            font-weight: 400;
+            color: #D8DEE7;
         }
 
         .game-count {
             display: inline-block;
-            background: var(--glass);
+            background: rgba(255, 255, 255, 0.15);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 14px;
             font-weight: 500;
-            color: var(--accent);
+            color: #A9CFFF;
         }
 
         .container {
@@ -93,9 +73,9 @@
 
         .sort-button {
             padding: 8px 16px;
-            background: rgba(169, 207, 255, 0.15);
-            border: 1px solid rgba(169, 207, 255, 0.35);
-            color: var(--accent);
+            background: rgba(169, 207, 255, 0.2);
+            border: 1px solid rgba(169, 207, 255, 0.4);
+            color: #A9CFFF;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
@@ -104,7 +84,7 @@
         }
 
         .sort-button:hover {
-            background: rgba(169, 207, 255, 0.28);
+            background: rgba(169, 207, 255, 0.35);
             border-color: rgba(169, 207, 255, 0.6);
         }
 
@@ -122,8 +102,8 @@
 
             padding: 15px;
 
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
 
             transition:
@@ -147,8 +127,8 @@
 
         .game:hover {
             transform: translateY(-4px);
-            border-color: rgba(255, 255, 255, 0.25);
-            box-shadow: 0 8px 24px rgba(42, 123, 155, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 24px rgba(42, 123, 155, 0.4);
         }
 
         .game-info {
@@ -169,9 +149,9 @@
         }
 
         .game-name {
-            color: var(--text);
+            color: #F5F7FA;
             font-size: 21px;
-            font-weight: 600;
+            font-weight: bold;
         }
 
         .steam {
@@ -179,7 +159,7 @@
 
             margin-top: 8px;
 
-            color: var(--accent);
+            color: #A9CFFF;
             text-decoration: none;
 
             font-size: 14px;
@@ -191,13 +171,13 @@
         }
 
         .rating {
-            color: var(--text);
+            color: #F5F7FA;
             font-size: 35px;
-            font-weight: 700;
+            font-weight: bold;
             white-space: nowrap;
 
             padding: 10px 16px;
-            background: rgba(169, 207, 255, 0.08);
+            background: rgba(169, 207, 255, 0.1);
             border-radius: 8px;
 
             transition:
@@ -206,14 +186,14 @@
         }
 
         .rating span {
-            color: var(--muted);
+            color: #B8C1CC;
             font-size: 15px;
-            font-weight: 400;
+            font-weight: normal;
         }
 
         .game:hover .rating {
-            background: rgba(169, 207, 255, 0.18);
-            box-shadow: 0 0 16px rgba(169, 207, 255, 0.2);
+            background: rgba(169, 207, 255, 0.25);
+            box-shadow: 0 0 16px rgba(169, 207, 255, 0.3);
         }
 
         .loading {
@@ -221,10 +201,10 @@
 
             text-align: center;
 
-            color: var(--muted);
+            color: #D8DEE7;
 
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
         }
 
@@ -232,8 +212,8 @@
             display: inline-block;
             width: 30px;
             height: 30px;
-            border: 3px solid rgba(169, 207, 255, 0.18);
-            border-top-color: var(--accent);
+            border: 3px solid rgba(169, 207, 255, 0.2);
+            border-top-color: #A9CFFF;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -247,10 +227,10 @@
 
             text-align: center;
 
-            color: var(--muted);
+            color: #D8DEE7;
 
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
         }
 
@@ -259,7 +239,7 @@
 
             text-align: center;
 
-            color: var(--muted);
+            color: #D8DEE7;
         }
 
         @media (max-width: 600px) {
