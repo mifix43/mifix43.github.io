@@ -4,5 +4,11 @@
         "rating": 10,
         "steam": "https://store.steampowered.com/app/481510/Night_in_the_Woods/",
         "image": "images/night-in-the-woods.jpg"
+    },
+    {
+        "name": "Dead by Daylight",
+        "rating": 9,
+        "steam": "https://store.steampowered.com/app/381210/Dead_by_Daylight/",
+        "image": "images/dead-by-daylight.jpg"
     }
 ]
