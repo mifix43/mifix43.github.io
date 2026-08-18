@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MIFIX — Ratings</title>
+    <title>MIFIX — Steam Ratings</title>
 
     <style>
         * {
@@ -17,16 +16,10 @@
             min-height: 100vh;
             color: #F5F7FA;
 
-            background:
-                linear-gradient(
-                    rgba(48, 58, 80, 0.8),
-                    rgba(48, 58, 80, 0.8)
-                ),
-                url('https://i.pinimg.com/originals/59/b2/34/59b2349684d902730f710b65f05ecb80.gif');
-
+            background: url("https://i.pinimg.com/originals/59/b2/34/59b2349684d902730f710b65f05ecb80.gif");
             background-size: cover;
-            background-attachment: fixed;
             background-position: center;
+            background-attachment: fixed;
         }
 
         header {
@@ -41,74 +34,10 @@
             font-size: 32px;
         }
 
-        .header-subtitle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+        header p {
             margin-top: 10px;
             color: #D8DEE7;
         }
-
-        .tab-subtitle {
-            background: none;
-            border: none;
-            color: #D8DEE7;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 500;
-        }
-
-        .tab-subtitle:hover {
-            color: #A9CFFF;
-            background: rgba(169, 207, 255, 0.1);
-        }
-
-        .game-count {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.15);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #A9CFFF;
-        }
-
-        /* Tabs */
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .tab-button {
-            padding: 10px 20px;
-            background: rgba(169, 207, 255, 0.1);
-            border: 1px solid rgba(169, 207, 255, 0.3);
-            color: #A9CFFF;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .tab-button:hover {
-            background: rgba(169, 207, 255, 0.2);
-        }
-
-        .tab-button.active {
-            background: rgba(169, 207, 255, 0.4);
-            border-color: rgba(169, 207, 255, 0.8);
-        }
-
-        /* Main container */
 
         .container {
             max-width: 900px;
@@ -116,46 +45,13 @@
             padding: 0 20px;
         }
 
-        /* Controls */
-
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-        .sort-button {
-            padding: 8px 16px;
-            background: rgba(169, 207, 255, 0.2);
-            border: 1px solid rgba(169, 207, 255, 0.4);
-            color: #A9CFFF;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            transition: all 0.2s;
-        }
-
-        .sort-button:hover {
-            background: rgba(169, 207, 255, 0.35);
-            border-color: rgba(169, 207, 255, 0.6);
-        }
-
-        /* Lists */
-
-        .games,
-        .movies {
+        .games {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        /* Game / Movie cards */
-
-        .game,
-        .movie {
+        .game {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -171,57 +67,40 @@
                 transform 0.2s,
                 border-color 0.2s,
                 box-shadow 0.2s;
-
-            animation: slideIn 0.4s ease-out;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .game:hover,
-        .movie:hover {
+        .game:hover {
             transform: translateY(-4px);
             border-color: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 24px rgba(42, 123, 155, 0.4);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
         }
 
-        /* Information */
-
-        .game-info,
-        .movie-info {
+        .game-info {
             display: flex;
             align-items: center;
             gap: 18px;
         }
 
-        .game-image,
-        .movie-image {
+        .game-image {
             width: 100px;
             height: 130px;
-
             object-fit: cover;
-
             border-radius: 8px;
             background: #202936;
         }
 
-        .game-name,
-        .movie-name {
+        .game-name {
             color: #F5F7FA;
             font-size: 21px;
             font-weight: 700;
         }
 
-        /* Steam link */
+        .description {
+            margin-top: 8px;
+            color: #D8DEE7;
+            font-size: 14px;
+            line-height: 1.4;
+        }
 
         .steam {
             display: block;
@@ -239,21 +118,20 @@
             text-decoration: underline;
         }
 
-        /* Numeric rating */
-
         .rating {
+            padding: 10px 16px;
+
             color: #F5F7FA;
             font-size: 35px;
             font-weight: 700;
             white-space: nowrap;
 
-            padding: 10px 16px;
+            background: rgba(169, 207, 255, 0.1);
             border-radius: 8px;
 
             transition:
                 box-shadow 0.2s,
-                background 0.2s,
-                transform 0.2s;
+                background 0.2s;
         }
 
         .rating span {
@@ -262,188 +140,67 @@
             font-weight: 700;
         }
 
-        .rating.green {
-            background: linear-gradient(
-                135deg,
-                #66BB6A,
-                #4CAF50
-            );
-
-            box-shadow:
-                0 0 12px rgba(76, 175, 80, 0.3);
+        .game:hover .rating {
+            background: rgba(169, 207, 255, 0.2);
+            box-shadow: 0 0 16px rgba(169, 207, 255, 0.25);
         }
-
-        .rating.green:hover {
-            box-shadow:
-                0 0 20px rgba(76, 175, 80, 0.5);
-
-            transform: scale(1.05);
-        }
-
-        .rating.yellow {
-            background: linear-gradient(
-                135deg,
-                #FDD835,
-                #FBC02D
-            );
-
-            box-shadow:
-                0 0 12px rgba(251, 192, 45, 0.3);
-
-            color: #000;
-        }
-
-        .rating.yellow:hover {
-            box-shadow:
-                0 0 20px rgba(251, 192, 45, 0.5);
-
-            transform: scale(1.05);
-        }
-
-        .rating.yellow span {
-            color: #000;
-        }
-
-        .rating.red {
-            background: linear-gradient(
-                135deg,
-                #EF5350,
-                #E53935
-            );
-
-            box-shadow:
-                0 0 12px rgba(229, 57, 53, 0.3);
-        }
-
-        .rating.red:hover {
-            box-shadow:
-                0 0 20px rgba(229, 57, 53, 0.5);
-
-            transform: scale(1.05);
-        }
-
-        /* Loading */
-
-        .loading {
-            padding: 40px 20px;
-
-            text-align: center;
-
-            color: #D8DEE7;
-
-            background: rgba(8, 11, 16, 0.88);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
-
-            font-weight: 700;
-        }
-
-        .spinner {
-            display: inline-block;
-
-            width: 30px;
-            height: 30px;
-
-            border: 3px solid rgba(169, 207, 255, 0.2);
-            border-top-color: #A9CFFF;
-
-            border-radius: 50%;
-
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Empty state */
 
         .empty {
             padding: 70px 20px;
 
             text-align: center;
-
             color: #D8DEE7;
 
             background: rgba(8, 11, 16, 0.88);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
-
-            font-weight: 700;
         }
-
-        /* Footer */
 
         footer {
             padding: 30px;
-
             text-align: center;
-
             color: #D8DEE7;
-
-            font-weight: 700;
         }
-
-        /* Mascot */
 
         .mascot {
             position: fixed;
-
-            bottom: -40px;
             right: 20px;
+            bottom: -40px;
 
             width: 200px;
             height: 200px;
 
             cursor: pointer;
-
             z-index: 100;
 
-            transition: all 0.3s ease;
+            transition:
+                bottom 0.3s ease,
+                transform 0.3s ease,
+                filter 0.3s ease;
         }
 
         .mascot:hover {
             bottom: 0;
-
             transform: scale(1.05);
 
-            filter:
-                drop-shadow(
-                    0 0 20px rgba(169, 207, 255, 0.5)
-                );
+            filter: drop-shadow(
+                0 0 20px rgba(169, 207, 255, 0.5)
+            );
         }
 
         .mascot img {
             width: 100%;
             height: 100%;
-
             object-fit: contain;
         }
 
-        /* Tabs content */
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Mobile */
-
         @media (max-width: 600px) {
-
-            .game,
-            .movie {
+            .game {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .game-info,
-            .movie-info {
+            .game-info {
                 width: 100%;
             }
 
@@ -451,29 +208,15 @@
                 align-self: flex-end;
             }
 
-            .game-image,
-            .movie-image {
+            .game-image {
                 width: 80px;
                 height: 105px;
-            }
-
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .sort-button {
-                width: 100%;
             }
 
             .mascot {
                 width: 140px;
                 height: 140px;
                 right: 10px;
-            }
-
-            .tabs {
-                flex-wrap: wrap;
             }
         }
     </style>
@@ -482,130 +225,124 @@
 <body>
 
 <header>
-    <h1>MIFIX — Ratings</h1>
-
-    <div class="header-subtitle">
-        <button
-            class="tab-subtitle"
-            id="subtitleBtn"
-        >
-            Мой личный рейтинг игр
-        </button>
-
-        <span
-            class="game-count"
-            id="counter"
-        >
-            0 игр
-        </span>
-    </div>
+    <h1>MIFIX — Steam Ratings</h1>
+    <p>Мой личный рейтинг игр</p>
 </header>
 
-<div class="tabs">
-
-    <button
-        class="tab-button active"
-        data-tab="games"
-    >
-        🎮 Games
-    </button>
-
-    <button
-        class="tab-button"
-        data-tab="movies"
-    >
-        🎬 Movies
-    </button>
-
-</div>
-
 <main class="container">
-
-    <!-- Games -->
-
-    <div
-        class="tab-content active"
-        id="games-tab"
-    >
-
-        <div
-            class="controls"
-            id="controls"
-            style="display: none;"
-        >
-
-            <button
-                class="sort-button"
-                id="sortBtn"
-            >
-                Сортировка: по рейтингу ⬇️
-            </button>
-
-        </div>
-
-        <div
-            class="games"
-            id="games"
-        ></div>
-
-    </div>
-
-
-    <!-- Movies -->
-
-    <div
-        class="tab-content"
-        id="movies-tab"
-    >
-
-        <div
-            class="controls"
-            id="movies-controls"
-            style="display: none;"
-        >
-
-            <button
-                class="sort-button"
-                id="movies-sortBtn"
-            >
-                Сортировка: по рейтингу ⬇️
-            </button>
-
-        </div>
-
-        <div
-            class="movies"
-            id="movies"
-        ></div>
-
-    </div>
-
+    <div class="games" id="games"></div>
 </main>
-
 
 <footer>
     © 2026 MIFIX
 </footer>
 
-
 <a
     href="https://t.me/m1fixpixel"
     target="_blank"
-    rel="noopener noreferrer"
+    rel="noopener"
     class="mascot"
     title="Перейти в Telegram"
 >
-
     <img
         src="https://i.imgur.gg/ols7ZDd-image-removebg-preview.png"
         alt="MIFIX Mascot"
-        onerror="this.style.display='none'"
     >
-
 </a>
 
+<script>
+    const gamesContainer = document.getElementById("games");
 
-<script src="app.js"></script>
+    fetch("games.json")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Не удалось загрузить games.json");
+            }
+
+            return response.json();
+        })
+        .then(games => {
+            if (!games.length) {
+                gamesContainer.innerHTML = `
+                    <div class="empty">
+                        Пока игр нет 🎮
+                    </div>
+                `;
+
+                return;
+            }
+
+            gamesContainer.innerHTML = games.map(game => `
+                <article class="game">
+
+                    <div class="game-info">
+
+                        ${
+                            game.image
+                                ? `
+                                    <img
+                                        class="game-image"
+                                        src="${game.image}"
+                                        alt="${game.name}"
+                                    >
+                                `
+                                : `
+                                    <div class="game-image"></div>
+                                `
+                        }
+
+                        <div>
+
+                            <div class="game-name">
+                                ${game.name}
+                            </div>
+
+                            ${
+                                game.description
+                                    ? `
+                                        <div class="description">
+                                            ${game.description}
+                                        </div>
+                                    `
+                                    : ""
+                            }
+
+                            ${
+                                game.steam
+                                    ? `
+                                        <a
+                                            class="steam"
+                                            href="${game.steam}"
+                                            target="_blank"
+                                            rel="noopener"
+                                        >
+                                            Открыть в Steam ↗
+                                        </a>
+                                    `
+                                    : ""
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <div class="rating">
+                        ${game.rating}<span>/10</span>
+                    </div>
+
+                </article>
+            `).join("");
+        })
+        .catch(error => {
+            console.error(error);
+
+            gamesContainer.innerHTML = `
+                <div class="empty">
+                    Не удалось загрузить список игр.
+                </div>
+            `;
+        });
+</script>
 
 </body>
 </html>
