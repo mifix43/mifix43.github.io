@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>MIFIX — Steam Ratings</title>
 
     <style>
@@ -45,8 +46,28 @@
             background: #121923;
             border: 1px solid #283342;
             border-radius: 12px;
-            padding: 20px;
+            padding: 15px;
             margin-bottom: 15px;
+            transition: 0.2s;
+        }
+
+        .game:hover {
+            border-color: #3d5068;
+            transform: translateY(-2px);
+        }
+
+        .game-info {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .game-image {
+            width: 100px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #202936;
         }
 
         .game-name {
@@ -62,9 +83,14 @@
             margin-top: 7px;
         }
 
+        .steam:hover {
+            text-decoration: underline;
+        }
+
         .rating {
             font-size: 35px;
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .rating span {
@@ -99,6 +125,11 @@
             color: white;
         }
 
+        input[type="file"] {
+            width: auto;
+            cursor: pointer;
+        }
+
         button {
             background: #2774d8;
             color: white;
@@ -119,16 +150,29 @@
             margin-top: 25px;
         }
 
-        footer {
-            text-align: center;
-            color: #657184;
-            padding: 30px;
+        .preview {
+            display: none;
+            margin: 10px 5px;
+        }
+
+        .preview img {
+            width: 100px;
+            height: 130px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #354154;
         }
 
         .empty {
             text-align: center;
             color: #657184;
             padding: 50px;
+        }
+
+        footer {
+            text-align: center;
+            color: #657184;
+            padding: 30px;
         }
 
         @media (max-width: 600px) {
@@ -138,8 +182,17 @@
                 gap: 15px;
             }
 
+            .game-info {
+                width: 100%;
+            }
+
             .rating {
                 align-self: flex-end;
+            }
+
+            .game-image {
+                width: 80px;
+                height: 105px;
             }
         }
     </style>
@@ -148,9 +201,13 @@
 <body>
 
 <header>
+
     <h1>MIFIX — Steam Ratings</h1>
+
     <p>Мой личный рейтинг игр</p>
+
 </header>
+
 
 <div class="container">
 
@@ -173,6 +230,7 @@
             </button>
 
         </div>
+
 
         <div id="adminPanel">
 
@@ -205,9 +263,40 @@
 
             </select>
 
+
+            <!-- КАРТИНКА ИГРЫ -->
+
+            <input
+                type="file"
+                id="gameImage"
+                accept="image/*"
+                onchange="previewImage()"
+            >
+
+
+            <!-- ПРЕДПРОСМОТР -->
+
+            <div
+                class="preview"
+                id="imagePreview"
+            >
+
+                <img
+                    id="preview"
+                    src=""
+                    alt="Предпросмотр"
+                >
+
+            </div>
+
+
+            <br>
+
+
             <button onclick="addGame()">
                 Добавить игру
             </button>
+
 
             <button onclick="logout()">
                 Выйти
@@ -224,6 +313,7 @@
 
 </div>
 
+
 <footer>
     © 2026 MIFIX
 </footer>
@@ -231,19 +321,26 @@
 
 <script>
 
-    // ПАРОЛЬ ВЛАДЕЛЬЦА
+    // =================================
+    // ПАРОЛЬ АДМИНИСТРАТОРА
+    // =================================
 
     const ADMIN_PASSWORD = "mifix123";
 
 
-    // ПОЛУЧАЕМ ИГРЫ ИЗ ПАМЯТИ
+    // =================================
+    // ЗАГРУЗКА ИГР
+    // =================================
 
-    let games = JSON.parse(
-        localStorage.getItem("mifixGames")
-    ) || [];
+    let games =
+        JSON.parse(
+            localStorage.getItem("mifixGames")
+        ) || [];
 
 
+    // =================================
     // ОТОБРАЖЕНИЕ ИГР
+    // =================================
 
     function renderGames() {
 
@@ -275,28 +372,48 @@
 
             element.innerHTML = `
 
-                <div>
-
-                    <div class="game-name">
-                        ${game.name}
-                    </div>
+                <div class="game-info">
 
                     ${
-                        game.link
+                        game.image
                         ?
                         `
-                        <a
-                            class="steam"
-                            href="${game.link}"
-                            target="_blank"
-                            rel="noopener"
+                        <img
+                            class="game-image"
+                            src="${game.image}"
+                            alt="${game.name}"
                         >
-                            Открыть в Steam ↗
-                        </a>
                         `
                         :
-                        ""
+                        `
+                        <div class="game-image"></div>
+                        `
                     }
+
+                    <div>
+
+                        <div class="game-name">
+                            ${game.name}
+                        </div>
+
+                        ${
+                            game.link
+                            ?
+                            `
+                            <a
+                                class="steam"
+                                href="${game.link}"
+                                target="_blank"
+                                rel="noopener"
+                            >
+                                Открыть в Steam ↗
+                            </a>
+                            `
+                            :
+                            ""
+                        }
+
+                    </div>
 
                 </div>
 
@@ -305,9 +422,7 @@
 
                     ${game.rating}
 
-                    <span>
-                        /10
-                    </span>
+                    <span>/10</span>
 
                 </div>
 
@@ -321,12 +436,16 @@
     }
 
 
-    // ВХОД
+    // =================================
+    // ВХОД АДМИНИСТРАТОРА
+    // =================================
 
     function login() {
 
         const password =
-            document.getElementById("password").value;
+            document.getElementById(
+                "password"
+            ).value;
 
 
         if (password === ADMIN_PASSWORD) {
@@ -336,18 +455,24 @@
             ).style.display = "block";
 
 
-            alert("Добро пожаловать, MIFIX!");
+            alert(
+                "Добро пожаловать, MIFIX!"
+            );
 
         } else {
 
-            alert("Неверный пароль!");
+            alert(
+                "Неверный пароль!"
+            );
 
         }
 
     }
 
 
+    // =================================
     // ВЫХОД
+    // =================================
 
     function logout() {
 
@@ -358,7 +483,49 @@
     }
 
 
+    // =================================
+    // ПРЕДПРОСМОТР КАРТИНКИ
+    // =================================
+
+    function previewImage() {
+
+        const file =
+            document.getElementById(
+                "gameImage"
+            ).files[0];
+
+
+        if (!file) {
+            return;
+        }
+
+
+        const reader =
+            new FileReader();
+
+
+        reader.onload = function(event) {
+
+            document.getElementById(
+                "preview"
+            ).src = event.target.result;
+
+
+            document.getElementById(
+                "imagePreview"
+            ).style.display = "block";
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+    }
+
+
+    // =================================
     // ДОБАВЛЕНИЕ ИГРЫ
+    // =================================
 
     function addGame() {
 
@@ -382,6 +549,12 @@
             );
 
 
+        const imageFile =
+            document.getElementById(
+                "gameImage"
+            ).files[0];
+
+
         if (!name) {
 
             alert(
@@ -389,9 +562,57 @@
             );
 
             return;
+        }
+
+
+        // Если картинка выбрана
+
+        if (imageFile) {
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload = function(event) {
+
+                saveGame(
+                    name,
+                    link,
+                    rating,
+                    event.target.result
+                );
+
+            };
+
+
+            reader.readAsDataURL(
+                imageFile
+            );
+
+        } else {
+
+            saveGame(
+                name,
+                link,
+                rating,
+                ""
+            );
 
         }
 
+    }
+
+
+    // =================================
+    // СОХРАНЕНИЕ ИГРЫ
+    // =================================
+
+    function saveGame(
+        name,
+        link,
+        rating,
+        image
+    ) {
 
         games.push({
 
@@ -399,12 +620,12 @@
 
             link: link,
 
-            rating: rating
+            rating: rating,
+
+            image: image
 
         });
 
-
-        // СОХРАНЕНИЕ
 
         localStorage.setItem(
             "mifixGames",
@@ -415,7 +636,7 @@
         renderGames();
 
 
-        // ОЧИСТКА ПОЛЕЙ
+        // Очищаем поля
 
         document.getElementById(
             "gameName"
@@ -426,10 +647,27 @@
             "steamLink"
         ).value = "";
 
+
+        document.getElementById(
+            "gameImage"
+        ).value = "";
+
+
+        document.getElementById(
+            "imagePreview"
+        ).style.display = "none";
+
+
+        alert(
+            "Игра успешно добавлена! 🎮"
+        );
+
     }
 
 
+    // =================================
     // ЗАПУСК
+    // =================================
 
     renderGames();
 
