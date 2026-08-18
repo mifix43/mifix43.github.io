@@ -14,7 +14,7 @@
     {
         "name": "The Crew 2",
         "rating": 1,
-        "steam": "",
-        "image": "https://upload.wikimedia.org/wikipedia/en/2/2b/The_Crew_2_box_art.jpg?utm_source=en.wikipedia.org&utm_campaign=index&utm_content=original"
+        "steam": "https://store.steampowered.com/app/646910/The_Crew_2/",
+        "image": "images/the-crew-2.jpg"
     }
 ]
