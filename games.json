@@ -2,6 +2,7 @@
     {
         "name": "Night in the Woods",
         "rating": 10,
-        "steam": "https://store.steampowered.com/app/481510/Night_in_the_Woods/"
+        "steam": "https://store.steampowered.com/app/481510/Night_in_the_Woods/",
+        "image": "images/night-in-the-woods.jpg"
     }
 ]
