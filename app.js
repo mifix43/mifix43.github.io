@@ -3,11 +3,11 @@ const modal = document.getElementById('modal');
 const modalClose = document.getElementById('modalClose');
 const modalTitle = document.getElementById('modalTitle');
 const tabButtons = document.querySelectorAll('.tab-button');
+const subtitleBtn = document.getElementById('subtitleBtn');
 const tabContents = document.querySelectorAll('.tab-content');
 const gamesContainer = document.getElementById('games');
 const moviesContainer = document.getElementById('movies');
 const counterElement = document.getElementById('counter');
-const tabSubtitle = document.getElementById('tabSubtitle');
 const controlsElement = document.getElementById('controls');
 const moviesControlsElement = document.getElementById('movies-controls');
 const sortBtn = document.getElementById('sortBtn');
@@ -20,6 +20,7 @@ let moviesSortOrder = null;
 let currentItem = null;
 let currentItemType = null;
 let reviews = {};
+let currentTab = 'games';
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -27,20 +28,32 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGames();
     loadMovies();
     setupTabButtons();
+    setupSubtitleButton();
     setupModalClose();
 });
+
+// Subtitle button functionality (cycles through tabs)
+function setupSubtitleButton() {
+    subtitleBtn.addEventListener('click', () => {
+        currentTab = currentTab === 'games' ? 'movies' : 'games';
+        switchTab(currentTab);
+    });
+}
 
 // Tab functionality
 function setupTabButtons() {
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const tabName = button.getAttribute('data-tab');
+            currentTab = tabName;
             switchTab(tabName);
         });
     });
 }
 
 function switchTab(tabName) {
+    currentTab = tabName;
+    
     // Update buttons
     tabButtons.forEach(btn => btn.classList.remove('active'));
     document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
@@ -49,12 +62,12 @@ function switchTab(tabName) {
     tabContents.forEach(content => content.classList.remove('active'));
     document.getElementById(`${tabName}-tab`).classList.add('active');
 
-    // Update header
+    // Update header subtitle and counter
     if (tabName === 'games') {
-        tabSubtitle.textContent = 'Мой личный рейтинг игр';
+        subtitleBtn.textContent = 'Мой личный рейтинг игр';
         updateCounter(gamesData.length);
     } else {
-        tabSubtitle.textContent = 'Мой личный рейтинг фильмов';
+        subtitleBtn.textContent = 'Мой личный рейтинг фильмов';
         updateCounter(moviesData.length);
     }
 }
