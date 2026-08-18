@@ -175,12 +175,12 @@
             white-space: nowrap;
 
             padding: 10px 16px;
-            background: rgba(169, 207, 255, 0.1);
             border-radius: 8px;
 
             transition:
                 box-shadow 0.2s,
-                background 0.2s;
+                background 0.2s,
+                transform 0.2s;
         }
 
         .rating span {
@@ -189,9 +189,55 @@
             font-weight: 700;
         }
 
+        /* Metacritic Color System (scaled from 1-10) */
+        /* Green: 7.5-10 */
+        .rating.green {
+            background: linear-gradient(135deg, #66BB6A, #4CAF50);
+            box-shadow: 0 0 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .rating.green:hover {
+            box-shadow: 0 0 20px rgba(76, 175, 80, 0.5);
+            transform: scale(1.05);
+        }
+
+        .rating.green span {
+            color: #B8C1CC;
+        }
+
+        /* Yellow: 5-7.4 */
+        .rating.yellow {
+            background: linear-gradient(135deg, #FDD835, #FBC02D);
+            box-shadow: 0 0 12px rgba(251, 192, 45, 0.3);
+            color: #000;
+        }
+
+        .rating.yellow:hover {
+            box-shadow: 0 0 20px rgba(251, 192, 45, 0.5);
+            transform: scale(1.05);
+        }
+
+        .rating.yellow span {
+            color: #000;
+        }
+
+        /* Red: 0-4.9 */
+        .rating.red {
+            background: linear-gradient(135deg, #EF5350, #E53935);
+            box-shadow: 0 0 12px rgba(229, 57, 53, 0.3);
+        }
+
+        .rating.red:hover {
+            box-shadow: 0 0 20px rgba(229, 57, 53, 0.5);
+            transform: scale(1.05);
+        }
+
+        .rating.red span {
+            color: #B8C1CC;
+        }
+
         .game:hover .rating {
-            background: rgba(169, 207, 255, 0.25);
-            box-shadow: 0 0 16px rgba(169, 207, 255, 0.3);
+            /* Color-specific hover effects handled by rating classes */
         }
 
         .loading {
@@ -350,8 +396,20 @@
     let gamesData = [];
     let sortOrder = null; // null | 'desc' | 'asc'
 
+    function getRatingColor(rating) {
+        // Scale from 1-10 to Metacritic system
+        // Green: 7.5-10
+        // Yellow: 5-7.4
+        // Red: 0-4.9
+        if (rating >= 7.5) return 'green';
+        if (rating >= 5) return 'yellow';
+        return 'red';
+    }
+
     function renderGames(games) {
-        gamesContainer.innerHTML = games.map(game => `
+        gamesContainer.innerHTML = games.map(game => {
+            const ratingColor = getRatingColor(game.rating);
+            return `
             <article class="game">
 
                 <div class="game-info">
@@ -395,13 +453,14 @@
 
                 </div>
 
-                <div class="rating">
+                <div class="rating ${ratingColor}">
                     ${game.rating}
                     <span>/10</span>
                 </div>
 
             </article>
-        `).join("");
+        `;
+        }).join("");
     }
 
     function updateCounter(count) {
