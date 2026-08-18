@@ -34,6 +34,8 @@
         }
 
         header {
+            position: relative;
+
             padding: 30px 20px;
 
             text-align: center;
@@ -58,6 +60,55 @@
 
             font-size: 15px;
             font-weight: 400;
+        }
+
+        /* MUSIC */
+
+        .music-button {
+            position: absolute;
+
+            top: 20px;
+            right: 20px;
+
+            padding: 9px 14px;
+
+            border: 1px solid rgba(143, 200, 255, 0.28);
+            border-radius: 8px;
+
+            color: #C9DCEB;
+            background: rgba(8, 11, 16, 0.82);
+
+            cursor: pointer;
+
+            font-family: "Inter", sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .music-button:hover {
+            border-color: rgba(143, 200, 255, 0.65);
+
+            background: rgba(20, 27, 38, 0.92);
+
+            box-shadow:
+                0 0 12px rgba(143, 200, 255, 0.12);
+
+            transform: translateY(-1px);
+        }
+
+        .music-button.active {
+            color: #E6F4FF;
+
+            border-color: rgba(143, 200, 255, 0.65);
+
+            box-shadow:
+                0 0 14px rgba(143, 200, 255, 0.15);
         }
 
         .tabs {
@@ -439,6 +490,12 @@
                 font-size: 26px;
             }
 
+            .music-button {
+                position: static;
+
+                margin-bottom: 15px;
+            }
+
             .tabs {
                 flex-wrap: wrap;
             }
@@ -478,6 +535,14 @@
 <body>
 
 <header>
+
+    <button
+        class="music-button"
+        id="musicButton"
+        type="button"
+    >
+        🎵 Музыка
+    </button>
 
     <h1>MIFIX — Games & Movies</h1>
 
@@ -592,6 +657,42 @@
         alt="MIFIX Mascot"
     >
 </a>
+
+
+<audio
+    id="backgroundMusic"
+    loop
+    preload="auto"
+>
+    <source
+        src="music/Background2.mp3"
+        type="audio/mpeg"
+    >
+</audio>
+
+
+<script>
+    const music = document.getElementById("backgroundMusic");
+    const musicButton = document.getElementById("musicButton");
+
+    musicButton.addEventListener("click", async () => {
+        try {
+            if (music.paused) {
+                await music.play();
+
+                musicButton.textContent = "🔊 Музыка включена";
+                musicButton.classList.add("active");
+            } else {
+                music.pause();
+
+                musicButton.textContent = "🎵 Музыка";
+                musicButton.classList.remove("active");
+            }
+        } catch (error) {
+            console.error("Не удалось запустить музыку:", error);
+        }
+    });
+</script>
 
 
 <script src="app.js"></script>
