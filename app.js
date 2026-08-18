@@ -2,7 +2,11 @@
 // MIFIX — Games & Movies
 // ================================
 
+
+// ================================
 // DOM Elements
+// ================================
+
 const tabButtons = document.querySelectorAll('.tab-button');
 const subtitleBtn = document.getElementById('subtitleBtn');
 const tabContents = document.querySelectorAll('.tab-content');
@@ -19,7 +23,10 @@ const sortBtn = document.getElementById('sortBtn');
 const moviesSortBtn = document.getElementById('movies-sortBtn');
 
 
+// ================================
 // Data
+// ================================
+
 let gamesData = [];
 let moviesData = [];
 
@@ -74,14 +81,12 @@ function sanitizeUrl(url) {
 // ================================
 
 document.addEventListener('DOMContentLoaded', () => {
-
     loadGames();
     loadMovies();
 
     setupTabButtons();
     setupSubtitleButton();
     setupSortButtons();
-
 });
 
 
@@ -90,11 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // ================================
 
 function setupTabButtons() {
-
     tabButtons.forEach(button => {
-
         button.addEventListener('click', () => {
-
             const tabName = button.getAttribute('data-tab');
 
             if (!tabName) {
@@ -102,41 +104,32 @@ function setupTabButtons() {
             }
 
             switchTab(tabName);
-
         });
-
     });
-
 }
 
 
 function setupSubtitleButton() {
-
     if (!subtitleBtn) {
         return;
     }
 
     subtitleBtn.addEventListener('click', () => {
-
         const nextTab =
             currentTab === 'games'
                 ? 'movies'
                 : 'games';
 
         switchTab(nextTab);
-
     });
-
 }
 
 
 function switchTab(tabName) {
-
     currentTab = tabName;
 
     // Buttons
     tabButtons.forEach(button => {
-
         button.classList.remove('active');
 
         if (
@@ -144,7 +137,6 @@ function switchTab(tabName) {
         ) {
             button.classList.add('active');
         }
-
     });
 
 
@@ -164,7 +156,6 @@ function switchTab(tabName) {
 
     // Header
     if (tabName === 'games') {
-
         if (subtitleBtn) {
             subtitleBtn.textContent =
                 'Мой личный рейтинг игр';
@@ -176,7 +167,6 @@ function switchTab(tabName) {
         );
 
     } else {
-
         if (subtitleBtn) {
             subtitleBtn.textContent =
                 'Мой личный рейтинг фильмов';
@@ -186,9 +176,7 @@ function switchTab(tabName) {
             moviesData.length,
             'movie'
         );
-
     }
-
 }
 
 
@@ -197,7 +185,6 @@ function switchTab(tabName) {
 // ================================
 
 function getRatingColor(rating) {
-
     if (rating >= 7.5) {
         return 'green';
     }
@@ -207,7 +194,6 @@ function getRatingColor(rating) {
     }
 
     return 'red';
-
 }
 
 
@@ -216,23 +202,19 @@ function getRatingColor(rating) {
 // ================================
 
 function normalizeItems(items) {
-
     if (!Array.isArray(items)) {
         return [];
     }
 
     return items
         .filter(item => {
-
             return (
                 item &&
                 typeof item === 'object' &&
                 typeof item.name === 'string'
             );
-
         })
         .map(item => {
-
             return {
                 name: item.name,
 
@@ -250,11 +232,14 @@ function normalizeItems(items) {
                 image:
                     typeof item.image === 'string'
                         ? item.image
+                        : '',
+
+                description:
+                    typeof item.description === 'string'
+                        ? item.description
                         : ''
             };
-
         });
-
 }
 
 
@@ -263,10 +248,10 @@ function normalizeItems(items) {
 // ================================
 
 function loadGames() {
-
     gamesContainer.innerHTML = `
         <div class="loading">
             <div class="spinner"></div>
+
             <p style="margin-top: 15px;">
                 Загрузка игр...
             </p>
@@ -275,9 +260,7 @@ function loadGames() {
 
 
     fetch('games.json')
-
         .then(response => {
-
             if (!response.ok) {
                 throw new Error(
                     'Не удалось загрузить games.json'
@@ -285,11 +268,9 @@ function loadGames() {
             }
 
             return response.json();
-
         })
 
         .then(games => {
-
             gamesData = normalizeItems(games);
 
             updateCounter(
@@ -302,11 +283,9 @@ function loadGames() {
             if (controlsElement) {
                 controlsElement.style.display = 'flex';
             }
-
         })
 
         .catch(error => {
-
             console.error(error);
 
             gamesContainer.innerHTML = `
@@ -314,16 +293,12 @@ function loadGames() {
                     Не удалось загрузить список игр. 🎮
                 </div>
             `;
-
         });
-
 }
 
 
 function renderGames(games) {
-
     if (!games.length) {
-
         gamesContainer.innerHTML = `
             <div class="empty">
                 Пока игр нет 🎮
@@ -336,7 +311,6 @@ function renderGames(games) {
 
     gamesContainer.innerHTML = games
         .map(game => {
-
             const ratingColor =
                 getRatingColor(game.rating);
 
@@ -357,7 +331,7 @@ function renderGames(games) {
                                 ? `
                                     <img
                                         class="game-image"
-                                        src="${safeImage}"
+                                        src="${escapeHtml(safeImage)}"
                                         alt="${escapeHtml(game.name)}"
                                         onerror="
                                             this.replaceWith(
@@ -382,12 +356,24 @@ function renderGames(games) {
                                 ${escapeHtml(game.name)}
                             </div>
 
+
+                            ${
+                                game.description
+                                    ? `
+                                        <div class="description">
+                                            ${escapeHtml(game.description)}
+                                        </div>
+                                    `
+                                    : ''
+                            }
+
+
                             ${
                                 safeSteam
                                     ? `
                                         <a
                                             class="steam"
-                                            href="${safeSteam}"
+                                            href="${escapeHtml(safeSteam)}"
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
@@ -403,18 +389,15 @@ function renderGames(games) {
 
 
                     <div class="rating ${ratingColor}">
-
                         ${escapeHtml(game.rating)}
 
                         <span>
                             /10
                         </span>
-
                     </div>
 
                 </article>
             `;
-
         })
         .join('');
 
@@ -423,14 +406,11 @@ function renderGames(games) {
     gamesContainer
         .querySelectorAll('.steam')
         .forEach(link => {
-
             link.addEventListener(
                 'click',
                 event => event.stopPropagation()
             );
-
         });
-
 }
 
 
@@ -439,10 +419,10 @@ function renderGames(games) {
 // ================================
 
 function loadMovies() {
-
     moviesContainer.innerHTML = `
         <div class="loading">
             <div class="spinner"></div>
+
             <p style="margin-top: 15px;">
                 Загрузка фильмов...
             </p>
@@ -451,9 +431,7 @@ function loadMovies() {
 
 
     fetch('movies.json')
-
         .then(response => {
-
             if (!response.ok) {
                 throw new Error(
                     'Не удалось загрузить movies.json'
@@ -461,11 +439,9 @@ function loadMovies() {
             }
 
             return response.json();
-
         })
 
         .then(movies => {
-
             moviesData = normalizeItems(movies);
 
             renderMovies(moviesData);
@@ -473,11 +449,9 @@ function loadMovies() {
             if (moviesControlsElement) {
                 moviesControlsElement.style.display = 'flex';
             }
-
         })
 
         .catch(error => {
-
             console.error(error);
 
             moviesContainer.innerHTML = `
@@ -485,16 +459,12 @@ function loadMovies() {
                     Пока фильмов нет 🎬
                 </div>
             `;
-
         });
-
 }
 
 
 function renderMovies(movies) {
-
     if (!movies.length) {
-
         moviesContainer.innerHTML = `
             <div class="empty">
                 Пока фильмов нет 🎬
@@ -507,7 +477,6 @@ function renderMovies(movies) {
 
     moviesContainer.innerHTML = movies
         .map(movie => {
-
             const ratingColor =
                 getRatingColor(movie.rating);
 
@@ -525,7 +494,7 @@ function renderMovies(movies) {
                                 ? `
                                     <img
                                         class="movie-image"
-                                        src="${safeImage}"
+                                        src="${escapeHtml(safeImage)}"
                                         alt="${escapeHtml(movie.name)}"
                                         onerror="
                                             this.replaceWith(
@@ -550,27 +519,34 @@ function renderMovies(movies) {
                                 ${escapeHtml(movie.name)}
                             </div>
 
+
+                            ${
+                                movie.description
+                                    ? `
+                                        <div class="description">
+                                            ${escapeHtml(movie.description)}
+                                        </div>
+                                    `
+                                    : ''
+                            }
+
                         </div>
 
                     </div>
 
 
                     <div class="rating ${ratingColor}">
-
                         ${escapeHtml(movie.rating)}
 
                         <span>
                             /10
                         </span>
-
                     </div>
 
                 </article>
             `;
-
         })
         .join('');
-
 }
 
 
@@ -579,35 +555,26 @@ function renderMovies(movies) {
 // ================================
 
 function setupSortButtons() {
-
     if (sortBtn) {
-
         sortBtn.addEventListener(
             'click',
             () => toggleSort('games')
         );
-
     }
 
 
     if (moviesSortBtn) {
-
         moviesSortBtn.addEventListener(
             'click',
             () => toggleSort('movies')
         );
-
     }
-
 }
 
 
 function toggleSort(type) {
-
     if (type === 'games') {
-
         if (gamesSortOrder === 'desc') {
-
             gamesSortOrder = 'asc';
 
             const sorted =
@@ -623,7 +590,6 @@ function toggleSort(type) {
             renderGames(sorted);
 
         } else {
-
             gamesSortOrder = 'desc';
 
             const sorted =
@@ -637,7 +603,6 @@ function toggleSort(type) {
                 'Сортировка: по рейтингу ⬇️';
 
             renderGames(sorted);
-
         }
 
         return;
@@ -645,9 +610,7 @@ function toggleSort(type) {
 
 
     if (type === 'movies') {
-
         if (moviesSortOrder === 'desc') {
-
             moviesSortOrder = 'asc';
 
             const sorted =
@@ -663,7 +626,6 @@ function toggleSort(type) {
             renderMovies(sorted);
 
         } else {
-
             moviesSortOrder = 'desc';
 
             const sorted =
@@ -677,11 +639,8 @@ function toggleSort(type) {
                 'Сортировка: по рейтингу ⬇️';
 
             renderMovies(sorted);
-
         }
-
     }
-
 }
 
 
@@ -690,17 +649,16 @@ function toggleSort(type) {
 // ================================
 
 function updateCounter(count, type = 'game') {
-
     let word;
 
 
     if (type === 'movie') {
-
         if (
             count % 10 === 1 &&
             count % 100 !== 11
         ) {
             word = 'фильм';
+
         } else if (
             count % 10 >= 2 &&
             count % 10 <= 4 &&
@@ -710,17 +668,18 @@ function updateCounter(count, type = 'game') {
             )
         ) {
             word = 'фильма';
+
         } else {
             word = 'фильмов';
         }
 
     } else {
-
         if (
             count % 10 === 1 &&
             count % 100 !== 11
         ) {
             word = 'игра';
+
         } else if (
             count % 10 >= 2 &&
             count % 10 <= 4 &&
@@ -730,10 +689,10 @@ function updateCounter(count, type = 'game') {
             )
         ) {
             word = 'игры';
+
         } else {
             word = 'игр';
         }
-
     }
 
 
@@ -741,5 +700,4 @@ function updateCounter(count, type = 'game') {
         counterElement.textContent =
             `${count} ${word}`;
     }
-
 }
