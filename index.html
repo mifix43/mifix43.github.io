@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIFIX — Steam Ratings</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #080b10;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            padding: 25px;
+            text-align: center;
+            border-bottom: 1px solid #222b38;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        header p {
+            color: #8995a5;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .game {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #121923;
+            border: 1px solid #283342;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .game-name {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .steam {
+            color: #66a3ff;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            margin-top: 7px;
+        }
+
+        .rating {
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .rating span {
+            font-size: 15px;
+            color: #788595;
+        }
+
+        .admin {
+            background: #121923;
+            border: 1px solid #283342;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .admin h2 {
+            margin-top: 0;
+        }
+
+        input,
+        select,
+        button {
+            padding: 11px;
+            border-radius: 7px;
+            border: 1px solid #354154;
+            margin: 5px;
+        }
+
+        input,
+        select {
+            background: #080b10;
+            color: white;
+        }
+
+        button {
+            background: #2774d8;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3985e8;
+        }
+
+        #adminPanel {
+            display: none;
+        }
+
+        .login {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        footer {
+            text-align: center;
+            color: #657184;
+            padding: 30px;
+        }
+
+        .empty {
+            text-align: center;
+            color: #657184;
+            padding: 50px;
+        }
+
+        @media (max-width: 600px) {
+            .game {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .rating {
+                align-self: flex-end;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>MIFIX — Steam Ratings</h1>
+    <p>Мой личный рейтинг игр</p>
+</header>
+
+<div class="container">
+
+    <!-- АДМИН-ПАНЕЛЬ -->
+
+    <div class="admin">
+
+        <h2>🔐 Вход владельца</h2>
+
+        <div class="login">
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Пароль"
+            >
+
+            <button onclick="login()">
+                Войти
+            </button>
+
+        </div>
+
+        <div id="adminPanel">
+
+            <h2>🎮 Добавить игру</h2>
+
+            <input
+                type="text"
+                id="gameName"
+                placeholder="Название игры"
+            >
+
+            <input
+                type="text"
+                id="steamLink"
+                placeholder="Ссылка на Steam"
+            >
+
+            <select id="gameRating">
+
+                <option value="1">1/10</option>
+                <option value="2">2/10</option>
+                <option value="3">3/10</option>
+                <option value="4">4/10</option>
+                <option value="5">5/10</option>
+                <option value="6">6/10</option>
+                <option value="7">7/10</option>
+                <option value="8">8/10</option>
+                <option value="9">9/10</option>
+                <option value="10">10/10</option>
+
+            </select>
+
+            <button onclick="addGame()">
+                Добавить игру
+            </button>
+
+            <button onclick="logout()">
+                Выйти
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- СПИСОК ИГР -->
+
+    <div id="games"></div>
+
+</div>
+
+<footer>
+    © 2026 MIFIX
+</footer>
+
+
+<script>
+
+    // ПАРОЛЬ ВЛАДЕЛЬЦА
+
+    const ADMIN_PASSWORD = "mifix123";
+
+
+    // ПОЛУЧАЕМ ИГРЫ ИЗ ПАМЯТИ
+
+    let games = JSON.parse(
+        localStorage.getItem("mifixGames")
+    ) || [];
+
+
+    // ОТОБРАЖЕНИЕ ИГР
+
+    function renderGames() {
+
+        const container =
+            document.getElementById("games");
+
+        container.innerHTML = "";
+
+
+        if (games.length === 0) {
+
+            container.innerHTML = `
+                <div class="empty">
+                    Пока здесь нет игр 🎮
+                </div>
+            `;
+
+            return;
+        }
+
+
+        games.forEach((game) => {
+
+            const element =
+                document.createElement("div");
+
+            element.className = "game";
+
+
+            element.innerHTML = `
+
+                <div>
+
+                    <div class="game-name">
+                        ${game.name}
+                    </div>
+
+                    ${
+                        game.link
+                        ?
+                        `
+                        <a
+                            class="steam"
+                            href="${game.link}"
+                            target="_blank"
+                            rel="noopener"
+                        >
+                            Открыть в Steam ↗
+                        </a>
+                        `
+                        :
+                        ""
+                    }
+
+                </div>
+
+
+                <div class="rating">
+
+                    ${game.rating}
+
+                    <span>
+                        /10
+                    </span>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(element);
+
+        });
+
+    }
+
+
+    // ВХОД
+
+    function login() {
+
+        const password =
+            document.getElementById("password").value;
+
+
+        if (password === ADMIN_PASSWORD) {
+
+            document.getElementById(
+                "adminPanel"
+            ).style.display = "block";
+
+
+            alert("Добро пожаловать, MIFIX!");
+
+        } else {
+
+            alert("Неверный пароль!");
+
+        }
+
+    }
+
+
+    // ВЫХОД
+
+    function logout() {
+
+        document.getElementById(
+            "adminPanel"
+        ).style.display = "none";
+
+    }
+
+
+    // ДОБАВЛЕНИЕ ИГРЫ
+
+    function addGame() {
+
+        const name =
+            document.getElementById(
+                "gameName"
+            ).value.trim();
+
+
+        const link =
+            document.getElementById(
+                "steamLink"
+            ).value.trim();
+
+
+        const rating =
+            Number(
+                document.getElementById(
+                    "gameRating"
+                ).value
+            );
+
+
+        if (!name) {
+
+            alert(
+                "Введите название игры!"
+            );
+
+            return;
+
+        }
+
+
+        games.push({
+
+            name: name,
+
+            link: link,
+
+            rating: rating
+
+        });
+
+
+        // СОХРАНЕНИЕ
+
+        localStorage.setItem(
+            "mifixGames",
+            JSON.stringify(games)
+        );
+
+
+        renderGames();
+
+
+        // ОЧИСТКА ПОЛЕЙ
+
+        document.getElementById(
+            "gameName"
+        ).value = "";
+
+
+        document.getElementById(
+            "steamLink"
+        ).value = "";
+
+    }
+
+
+    // ЗАПУСК
+
+    renderGames();
+
+</script>
+
+</body>
+</html>
