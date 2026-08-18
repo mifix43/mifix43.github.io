@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>MIFIX — Steam Ratings</title>
+    <title>MIFIX — Games & Movies</title>
 
     <style>
         * {
@@ -14,6 +14,7 @@
         body {
             margin: 0;
             min-height: 100vh;
+
             color: #F5F7FA;
 
             background: url("https://i.pinimg.com/originals/59/b2/34/59b2349684d902730f710b65f05ecb80.gif");
@@ -30,28 +31,96 @@
 
         header h1 {
             margin: 0;
-            color: #F5F7FA;
             font-size: 32px;
         }
 
         header p {
+            margin: 10px 0 0;
+            color: #D8DEE7;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .tab-button,
+        .subtitle-button,
+        .sort-button {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+
+            padding: 10px 18px;
+
+            color: #D8DEE7;
+            background: rgba(8, 11, 16, 0.82);
+
+            cursor: pointer;
+            font-size: 14px;
+
+            transition:
+                background 0.2s,
+                border-color 0.2s,
+                transform 0.2s;
+        }
+
+        .tab-button:hover,
+        .subtitle-button:hover,
+        .sort-button:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(20, 27, 38, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .tab-button.active {
+            color: #fff;
+            background: rgba(60, 75, 95, 0.95);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+
+        .subtitle-button {
+            margin-top: 15px;
+            border: 0;
+            background: transparent;
+        }
+
+        .counter {
             margin-top: 10px;
             color: #D8DEE7;
+            font-size: 14px;
         }
 
         .container {
             max-width: 900px;
-            margin: 40px auto;
+            margin: 35px auto;
             padding: 0 20px;
         }
 
-        .games {
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .controls {
+            display: none;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .games,
+        .movies {
             display: flex;
             flex-direction: column;
             gap: 15px;
         }
 
-        .game {
+        .game,
+        .movie {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -69,41 +138,44 @@
                 box-shadow 0.2s;
         }
 
-        .game:hover {
-            transform: translateY(-4px);
+        .game:hover,
+        .movie:hover {
+            transform: translateY(-3px);
             border-color: rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
         }
 
-        .game-info {
+        .game-info,
+        .movie-info {
             display: flex;
             align-items: center;
             gap: 18px;
         }
 
-        .game-image {
+        .game-image,
+        .movie-image {
             width: 100px;
             height: 130px;
+
+            flex-shrink: 0;
+
             object-fit: cover;
+
             border-radius: 8px;
+
             background: #202936;
         }
 
-        .game-name {
+        .game-name,
+        .movie-name {
             color: #F5F7FA;
             font-size: 21px;
             font-weight: 700;
         }
 
-        .description {
-            margin-top: 8px;
-            color: #D8DEE7;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
         .steam {
             display: block;
+
             margin-top: 8px;
 
             color: #A9CFFF;
@@ -118,37 +190,60 @@
             text-decoration: underline;
         }
 
+        .description {
+            margin-top: 8px;
+            color: #D8DEE7;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
         .rating {
-            padding: 10px 16px;
+            min-width: 95px;
 
-            color: #F5F7FA;
-            font-size: 35px;
-            font-weight: 700;
-            white-space: nowrap;
+            padding: 10px 14px;
 
-            background: rgba(169, 207, 255, 0.1);
             border-radius: 8px;
 
-            transition:
-                box-shadow 0.2s,
-                background 0.2s;
+            text-align: center;
+
+            color: #fff;
+
+            font-size: 32px;
+            font-weight: 700;
+
+            white-space: nowrap;
         }
 
         .rating span {
-            color: #B8C1CC;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
+            opacity: 0.8;
         }
 
-        .game:hover .rating {
-            background: rgba(169, 207, 255, 0.2);
-            box-shadow: 0 0 16px rgba(169, 207, 255, 0.25);
+        .rating.green {
+            background: rgba(46, 204, 113, 0.25);
+            color: #5CFF9A;
+            box-shadow: 0 0 18px rgba(46, 204, 113, 0.15);
         }
 
-        .empty {
-            padding: 70px 20px;
+        .rating.yellow {
+            background: rgba(241, 196, 15, 0.25);
+            color: #FFE16B;
+            box-shadow: 0 0 18px rgba(241, 196, 15, 0.15);
+        }
+
+        .rating.red {
+            background: rgba(231, 76, 60, 0.25);
+            color: #FF766B;
+            box-shadow: 0 0 18px rgba(231, 76, 60, 0.15);
+        }
+
+        .empty,
+        .loading {
+            padding: 60px 20px;
 
             text-align: center;
+
             color: #D8DEE7;
 
             background: rgba(8, 11, 16, 0.88);
@@ -156,22 +251,46 @@
             border-radius: 12px;
         }
 
+        .spinner {
+            width: 32px;
+            height: 32px;
+
+            margin: 0 auto;
+
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            border-top-color: #F5F7FA;
+
+            border-radius: 50%;
+
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         footer {
             padding: 30px;
+
             text-align: center;
+
             color: #D8DEE7;
         }
 
         .mascot {
             position: fixed;
+
             right: 20px;
             bottom: -40px;
 
             width: 200px;
             height: 200px;
 
-            cursor: pointer;
             z-index: 100;
+
+            cursor: pointer;
 
             transition:
                 bottom 0.3s ease,
@@ -191,16 +310,27 @@
         .mascot img {
             width: 100%;
             height: 100%;
+
             object-fit: contain;
         }
 
         @media (max-width: 600px) {
-            .game {
+            header h1 {
+                font-size: 26px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .game,
+            .movie {
                 flex-direction: column;
                 align-items: flex-start;
             }
 
-            .game-info {
+            .game-info,
+            .movie-info {
                 width: 100%;
             }
 
@@ -208,7 +338,8 @@
                 align-self: flex-end;
             }
 
-            .game-image {
+            .game-image,
+            .movie-image {
                 width: 80px;
                 height: 105px;
             }
@@ -225,23 +356,113 @@
 <body>
 
 <header>
-    <h1>MIFIX — Steam Ratings</h1>
-    <p>Мой личный рейтинг игр</p>
+
+    <h1>MIFIX — Games & Movies</h1>
+
+    <button
+        class="subtitle-button"
+        id="subtitleBtn"
+        type="button"
+    >
+        Мой личный рейтинг игр
+    </button>
+
+    <div
+        class="counter"
+        id="counter"
+    >
+        Загрузка...
+    </div>
+
+    <nav class="tabs">
+
+        <button
+            class="tab-button active"
+            data-tab="games"
+            type="button"
+        >
+            🎮 Games
+        </button>
+
+        <button
+            class="tab-button"
+            data-tab="movies"
+            type="button"
+        >
+            🎬 Movies
+        </button>
+
+    </nav>
+
 </header>
 
+
 <main class="container">
-    <div class="games" id="games"></div>
+
+    <section
+        class="tab-content active"
+        id="games-tab"
+    >
+
+        <div
+            class="controls"
+            id="controls"
+        >
+            <button
+                class="sort-button"
+                id="sortBtn"
+                type="button"
+            >
+                Сортировка: по рейтингу
+            </button>
+        </div>
+
+        <div
+            class="games"
+            id="games"
+        ></div>
+
+    </section>
+
+
+    <section
+        class="tab-content"
+        id="movies-tab"
+    >
+
+        <div
+            class="controls"
+            id="movies-controls"
+        >
+            <button
+                class="sort-button"
+                id="movies-sortBtn"
+                type="button"
+            >
+                Сортировка: по рейтингу
+            </button>
+        </div>
+
+        <div
+            class="movies"
+            id="movies"
+        ></div>
+
+    </section>
+
 </main>
+
 
 <footer>
     © 2026 MIFIX
 </footer>
 
+
 <a
+    class="mascot"
     href="https://t.me/m1fixpixel"
     target="_blank"
-    rel="noopener"
-    class="mascot"
+    rel="noopener noreferrer"
     title="Перейти в Telegram"
 >
     <img
@@ -250,99 +471,8 @@
     >
 </a>
 
-<script>
-    const gamesContainer = document.getElementById("games");
 
-    fetch("games.json")
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Не удалось загрузить games.json");
-            }
-
-            return response.json();
-        })
-        .then(games => {
-            if (!games.length) {
-                gamesContainer.innerHTML = `
-                    <div class="empty">
-                        Пока игр нет 🎮
-                    </div>
-                `;
-
-                return;
-            }
-
-            gamesContainer.innerHTML = games.map(game => `
-                <article class="game">
-
-                    <div class="game-info">
-
-                        ${
-                            game.image
-                                ? `
-                                    <img
-                                        class="game-image"
-                                        src="${game.image}"
-                                        alt="${game.name}"
-                                    >
-                                `
-                                : `
-                                    <div class="game-image"></div>
-                                `
-                        }
-
-                        <div>
-
-                            <div class="game-name">
-                                ${game.name}
-                            </div>
-
-                            ${
-                                game.description
-                                    ? `
-                                        <div class="description">
-                                            ${game.description}
-                                        </div>
-                                    `
-                                    : ""
-                            }
-
-                            ${
-                                game.steam
-                                    ? `
-                                        <a
-                                            class="steam"
-                                            href="${game.steam}"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            Открыть в Steam ↗
-                                        </a>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                    <div class="rating">
-                        ${game.rating}<span>/10</span>
-                    </div>
-
-                </article>
-            `).join("");
-        })
-        .catch(error => {
-            console.error(error);
-
-            gamesContainer.innerHTML = `
-                <div class="empty">
-                    Не удалось загрузить список игр.
-                </div>
-            `;
-        });
-</script>
+<script src="app.js"></script>
 
 </body>
 </html>
