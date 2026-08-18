@@ -38,15 +38,54 @@
             font-size: 32px;
         }
 
-        header p {
+        .header-subtitle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             margin-top: 10px;
             color: #D8DEE7;
+        }
+
+        .game-count {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #A9CFFF;
         }
 
         .container {
             max-width: 900px;
             margin: 40px auto;
             padding: 0 20px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .sort-button {
+            padding: 8px 16px;
+            background: rgba(169, 207, 255, 0.2);
+            border: 1px solid rgba(169, 207, 255, 0.4);
+            color: #A9CFFF;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .sort-button:hover {
+            background: rgba(169, 207, 255, 0.35);
+            border-color: rgba(169, 207, 255, 0.6);
         }
 
         .games {
@@ -69,12 +108,27 @@
 
             transition:
                 transform 0.2s,
-                border-color 0.2s;
+                border-color 0.2s,
+                box-shadow 0.2s;
+
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .game:hover {
-            transform: translateY(-2px);
+            transform: translateY(-4px);
             border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 24px rgba(42, 123, 155, 0.4);
         }
 
         .game-info {
@@ -121,12 +175,51 @@
             font-size: 35px;
             font-weight: bold;
             white-space: nowrap;
+
+            padding: 10px 16px;
+            background: rgba(169, 207, 255, 0.1);
+            border-radius: 8px;
+
+            transition:
+                box-shadow 0.2s,
+                background 0.2s;
         }
 
         .rating span {
             color: #B8C1CC;
             font-size: 15px;
             font-weight: normal;
+        }
+
+        .game:hover .rating {
+            background: rgba(169, 207, 255, 0.25);
+            box-shadow: 0 0 16px rgba(169, 207, 255, 0.3);
+        }
+
+        .loading {
+            padding: 40px 20px;
+
+            text-align: center;
+
+            color: #D8DEE7;
+
+            background: rgba(8, 11, 16, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(169, 207, 255, 0.2);
+            border-top-color: #A9CFFF;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         .empty {
@@ -168,6 +261,15 @@
                 width: 80px;
                 height: 105px;
             }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sort-button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -176,10 +278,16 @@
 
 <header>
     <h1>MIFIX — Steam Ratings</h1>
-    <p>Мой личный рейтинг игр</p>
+    <div class="header-subtitle">
+        <span>Мой личный рейтинг игр</span>
+        <span class="game-count" id="counter">0 игр</span>
+    </div>
 </header>
 
 <main class="container">
+    <div class="controls" id="controls" style="display: none;">
+        <button class="sort-button" id="sortBtn">Сортировка: по рейтингу ⬇️</button>
+    </div>
     <div class="games" id="games"></div>
 </main>
 
@@ -189,6 +297,92 @@
 
 <script>
     const gamesContainer = document.getElementById("games");
+    const counterElement = document.getElementById("counter");
+    const controlsElement = document.getElementById("controls");
+    const sortBtn = document.getElementById("sortBtn");
+
+    let gamesData = [];
+    let isSorted = false;
+
+    function renderGames(games) {
+        gamesContainer.innerHTML = games.map(game => `
+            <article class="game">
+
+                <div class="game-info">
+
+                    ${
+                        game.image
+                            ? `
+                                <img
+                                    class="game-image"
+                                    src="${game.image}"
+                                    alt="${game.name}"
+                                >
+                            `
+                            : `
+                                <div class="game-image"></div>
+                            `
+                    }
+
+                    <div>
+
+                        <div class="game-name">
+                            ${game.name}
+                        </div>
+
+                        ${
+                            game.steam
+                                ? `
+                                    <a
+                                        class="steam"
+                                        href="${game.steam}"
+                                        target="_blank"
+                                        rel="noopener"
+                                    >
+                                        Открыть в Steam ↗
+                                    </a>
+                                `
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="rating">
+                    ${game.rating}
+                    <span>/10</span>
+                </div>
+
+            </article>
+        `).join("");
+    }
+
+    function updateCounter(count) {
+        const plural = count % 10 === 1 && count % 100 !== 11 ? 'игра' : 'игр';
+        counterElement.textContent = `${count} ${plural}`;
+    }
+
+    function toggleSort() {
+        isSorted = !isSorted;
+        const sorted = isSorted 
+            ? [...gamesData].sort((a, b) => b.rating - a.rating)
+            : gamesData;
+        
+        sortBtn.textContent = isSorted 
+            ? 'Сортировка: по рейтингу ⬇️' 
+            : 'Сортировка: оригинальный порядок';
+        
+        renderGames(sorted);
+    }
+
+    // Показать загрузку
+    gamesContainer.innerHTML = `
+        <div class="loading">
+            <div class="spinner"></div>
+            <p style="margin-top: 15px;">Загрузка игр...</p>
+        </div>
+    `;
 
     fetch("games.json")
         .then(response => {
@@ -205,61 +399,16 @@
                         Пока игр нет 🎮
                     </div>
                 `;
-
+                updateCounter(0);
                 return;
             }
 
-            gamesContainer.innerHTML = games.map(game => `
-                <article class="game">
+            gamesData = games;
+            updateCounter(games.length);
+            renderGames(games);
+            controlsElement.style.display = 'flex';
 
-                    <div class="game-info">
-
-                        ${
-                            game.image
-                                ? `
-                                    <img
-                                        class="game-image"
-                                        src="${game.image}"
-                                        alt="${game.name}"
-                                    >
-                                `
-                                : `
-                                    <div class="game-image"></div>
-                                `
-                        }
-
-                        <div>
-
-                            <div class="game-name">
-                                ${game.name}
-                            </div>
-
-                            ${
-                                game.steam
-                                    ? `
-                                        <a
-                                            class="steam"
-                                            href="${game.steam}"
-                                            target="_blank"
-                                            rel="noopener"
-                                        >
-                                            Открыть в Steam ↗
-                                        </a>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    </div>
-
-                    <div class="rating">
-                        ${game.rating}
-                        <span>/10</span>
-                    </div>
-
-                </article>
-            `).join("");
+            sortBtn.addEventListener('click', toggleSort);
         })
         .catch(error => {
             console.error(error);
