@@ -22,6 +22,33 @@ let currentItemType = null;
 let reviews = {};
 let currentTab = 'games';
 
+// Escape any string before it is inserted into innerHTML, to prevent XSS
+// if game/movie names or other fields ever contain HTML-special characters.
+function escapeHtml(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
+// Only allow http/https URLs to be used as href/src, to avoid javascript: URIs
+// or other unsafe schemes sneaking in through data files.
+function sanitizeUrl(url) {
+    if (typeof url !== 'string') return '';
+    try {
+        const parsed = new URL(url, window.location.href);
+        if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+            return parsed.href;
+        }
+    } catch (e) {
+        // invalid URL
+    }
+    return '';
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     loadReviews();
@@ -94,9 +121,9 @@ function loadGames() {
             return response.json();
         })
         .then(games => {
-            gamesData = games;
-            updateCounter(games.length);
-            renderGames(games);
+            gamesData = normalizeItems(games);
+            updateCounter(gamesData.length);
+            renderGames(gamesData);
             controlsElement.style.display = 'flex';
             sortBtn.addEventListener('click', () => toggleSort('games'));
         })
@@ -110,6 +137,20 @@ function loadGames() {
         });
 }
 
+// Validate/normalize raw JSON data so a malformed games.json/movies.json
+// can't crash rendering or inject unexpected values.
+function normalizeItems(items) {
+    if (!Array.isArray(items)) return [];
+    return items
+        .filter(item => item && typeof item === 'object' && typeof item.name === 'string')
+        .map(item => ({
+            name: item.name,
+            rating: typeof item.rating === 'number' && isFinite(item.rating) ? item.rating : 0,
+            steam: typeof item.steam === 'string' ? item.steam : '',
+            image: typeof item.image === 'string' ? item.image : ''
+        }));
+}
+
 function renderGames(games) {
     if (!games.length) {
         gamesContainer.innerHTML = `
@@ -120,32 +161,45 @@ function renderGames(games) {
         return;
     }
 
-    gamesContainer.innerHTML = games.map(game => {
+    gamesContainer.innerHTML = games.map((game, index) => {
         const ratingColor = getRatingColor(game.rating);
+        const safeImage = sanitizeUrl(game.image);
+        const safeSteam = sanitizeUrl(game.steam);
         return `
-            <article class="game" onclick="openReview(this, '${game.name}', 'game')">
+            <article class="game" data-index="${index}">
                 <div class="game-info">
-                    ${game.image ? `
-                        <img class="game-image" src="${game.image}" alt="${game.name}">
+                    ${safeImage ? `
+                        <img class="game-image" src="${safeImage}" alt="${escapeHtml(game.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'), {className: 'game-image'}))">
                     ` : `
                         <div class="game-image"></div>
                     `}
                     <div>
-                        <div class="game-name">${game.name}</div>
-                        ${game.steam ? `
-                            <a class="steam" href="${game.steam}" target="_blank" rel="noopener" onclick="event.stopPropagation();">
+                        <div class="game-name">${escapeHtml(game.name)}</div>
+                        ${safeSteam ? `
+                            <a class="steam" href="${safeSteam}" target="_blank" rel="noopener noreferrer">
                                 Открыть в Steam ↗
                             </a>
                         ` : ''}
                     </div>
                 </div>
                 <div class="rating ${ratingColor}">
-                    ${game.rating}
+                    ${escapeHtml(game.rating)}
                     <span>/10</span>
                 </div>
             </article>
         `;
     }).join('');
+
+    gamesContainer.querySelectorAll('.game').forEach(el => {
+        el.addEventListener('click', () => {
+            const idx = Number(el.getAttribute('data-index'));
+            openReview(games[idx].name, 'game');
+        });
+    });
+
+    gamesContainer.querySelectorAll('.steam').forEach(el => {
+        el.addEventListener('click', (e) => e.stopPropagation());
+    });
 }
 
 function toggleSort(type) {
@@ -191,8 +245,8 @@ function loadMovies() {
             return response.json();
         })
         .then(movies => {
-            moviesData = movies;
-            renderMovies(movies);
+            moviesData = normalizeItems(movies);
+            renderMovies(moviesData);
             moviesControlsElement.style.display = 'flex';
             moviesSortBtn.addEventListener('click', () => toggleSort('movies'));
         })
@@ -216,31 +270,39 @@ function renderMovies(movies) {
         return;
     }
 
-    moviesContainer.innerHTML = movies.map(movie => {
+    moviesContainer.innerHTML = movies.map((movie, index) => {
         const ratingColor = getRatingColor(movie.rating);
+        const safeImage = sanitizeUrl(movie.image);
         return `
-            <article class="movie" onclick="openReview(this, '${movie.name}', 'movie')">
+            <article class="movie" data-index="${index}">
                 <div class="movie-info">
-                    ${movie.image ? `
-                        <img class="movie-image" src="${movie.image}" alt="${movie.name}">
+                    ${safeImage ? `
+                        <img class="movie-image" src="${safeImage}" alt="${escapeHtml(movie.name)}" onerror="this.replaceWith(Object.assign(document.createElement('div'), {className: 'movie-image'}))">
                     ` : `
                         <div class="movie-image"></div>
                     `}
                     <div>
-                        <div class="movie-name">${movie.name}</div>
+                        <div class="movie-name">${escapeHtml(movie.name)}</div>
                     </div>
                 </div>
                 <div class="rating ${ratingColor}">
-                    ${movie.rating}
+                    ${escapeHtml(movie.rating)}
                     <span>/10</span>
                 </div>
             </article>
         `;
     }).join('');
+
+    moviesContainer.querySelectorAll('.movie').forEach(el => {
+        el.addEventListener('click', () => {
+            const idx = Number(el.getAttribute('data-index'));
+            openReview(movies[idx].name, 'movie');
+        });
+    });
 }
 
 // Modal & Reviews
-function openReview(element, itemName, type) {
+function openReview(itemName, type) {
     currentItem = itemName;
     currentItemType = type;
     
@@ -396,7 +458,17 @@ function saveReviews() {
 
 function loadReviews() {
     const stored = localStorage.getItem('reviews');
-    reviews = stored ? JSON.parse(stored) : {};
+    if (!stored) {
+        reviews = {};
+        return;
+    }
+    try {
+        const parsed = JSON.parse(stored);
+        reviews = (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
+    } catch (e) {
+        console.error('Corrupted reviews data in localStorage, resetting.', e);
+        reviews = {};
+    }
 }
 
 function updateCounter(count) {
