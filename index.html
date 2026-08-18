@@ -240,6 +240,41 @@
             font-weight: 700;
         }
 
+        .mascot {
+            position: fixed;
+            bottom: -40px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            animation: peek 0.6s ease-out forwards;
+        }
+
+        @keyframes peek {
+            from {
+                bottom: -80px;
+                transform: translateX(20px);
+            }
+            to {
+                bottom: -40px;
+                transform: translateX(0);
+            }
+        }
+
+        .mascot:hover {
+            bottom: -20px;
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px rgba(169, 207, 255, 0.5));
+        }
+
+        .mascot img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         @media (max-width: 600px) {
 
             .game {
@@ -268,6 +303,12 @@
             .sort-button {
                 width: 100%;
             }
+
+            .mascot {
+                width: 140px;
+                height: 140px;
+                right: 10px;
+            }
         }
     </style>
 </head>
@@ -292,6 +333,10 @@
 <footer>
     © 2026 MIFIX
 </footer>
+
+<a href="https://t.me/m1fixpixel" target="_blank" rel="noopener" class="mascot" title="Перейти в Telegram">
+    <img src="mascot.png" alt="MIFIX Mascot">
+</a>
 
 <script>
     const gamesContainer = document.getElementById("games");
