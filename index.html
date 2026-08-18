@@ -44,6 +44,23 @@
             color: #D8DEE7;
         }
 
+        .tab-subtitle {
+            background: none;
+            border: none;
+            color: #D8DEE7;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .tab-subtitle:hover {
+            color: #A9CFFF;
+            background: rgba(169, 207, 255, 0.1);
+        }
+
         .game-count {
             display: inline-block;
             background: rgba(255, 255, 255, 0.15);
@@ -545,7 +562,7 @@
 <header>
     <h1>MIFIX — Ratings</h1>
     <div class="header-subtitle">
-        <span id="tabSubtitle">Мой личный рейтинг игр</span>
+        <button class="tab-subtitle" id="subtitleBtn">Мой личный рейтинг игр</button>
         <span class="game-count" id="counter">0 игр</span>
     </div>
 </header>
