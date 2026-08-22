@@ -3,5 +3,10 @@
         "name": "My Little Pony: Friendship Is Magic",
         "rating": 10,
         "image": "images/my-little-pony.jpg"
+    },
+    {
+        "name": "Невероятный мистер Фокс",
+        "rating": 9,
+        "image": "images/fantastic-mr-fox.jpg"
     }
 ]
