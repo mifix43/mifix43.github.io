@@ -6,6 +6,10 @@
 
     <title>MIFIX — Games & Movies</title>
 
+    <!-- FAVICON -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- FONT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -111,6 +115,8 @@
                 0 0 14px rgba(143, 200, 255, 0.15);
         }
 
+        /* TABS */
+
         .tabs {
             display: flex;
             justify-content: center;
@@ -185,6 +191,8 @@
             font-weight: 500;
         }
 
+        /* CONTAINER */
+
         .container {
             max-width: 900px;
 
@@ -192,6 +200,8 @@
 
             padding: 0 20px;
         }
+
+        /* TABS CONTENT */
 
         .tab-content {
             display: none;
@@ -201,13 +211,17 @@
             display: block;
         }
 
+        /* CONTROLS */
+
         .controls {
-            display: none;
+            display: flex;
 
             justify-content: flex-end;
 
             margin-bottom: 15px;
         }
+
+        /* LISTS */
 
         .games,
         .movies {
@@ -217,6 +231,8 @@
 
             gap: 15px;
         }
+
+        /* GAME / MOVIE CARD */
 
         .game,
         .movie {
@@ -255,6 +271,8 @@
                 0 0 16px rgba(143, 200, 255, 0.08);
         }
 
+        /* INFO */
+
         .game-info,
         .movie-info {
             display: flex;
@@ -262,7 +280,11 @@
             align-items: center;
 
             gap: 18px;
+
+            min-width: 0;
         }
+
+        /* IMAGES */
 
         .game-image,
         .movie-image {
@@ -292,6 +314,8 @@
                 0 0 12px rgba(143, 200, 255, 0.1);
         }
 
+        /* NAMES */
+
         .game-name,
         .movie-name {
             color: #E6F4FF;
@@ -303,6 +327,8 @@
 
             letter-spacing: -0.2px;
         }
+
+        /* STEAM */
 
         .steam {
             display: block;
@@ -325,6 +351,8 @@
             text-decoration: underline;
         }
 
+        /* DESCRIPTION */
+
         .description {
             margin-top: 8px;
 
@@ -335,6 +363,8 @@
 
             line-height: 1.5;
         }
+
+        /* RATING */
 
         .rating {
             min-width: 95px;
@@ -366,6 +396,8 @@
             opacity: 0.8;
         }
 
+        /* GREEN */
+
         .rating.green {
             background: rgba(46, 204, 113, 0.25);
 
@@ -376,6 +408,8 @@
             box-shadow:
                 0 0 18px rgba(46, 204, 113, 0.15);
         }
+
+        /* YELLOW */
 
         .rating.yellow {
             background: rgba(241, 196, 15, 0.25);
@@ -388,6 +422,8 @@
                 0 0 18px rgba(241, 196, 15, 0.15);
         }
 
+        /* RED */
+
         .rating.red {
             background: rgba(231, 76, 60, 0.25);
 
@@ -398,6 +434,8 @@
             box-shadow:
                 0 0 18px rgba(231, 76, 60, 0.15);
         }
+
+        /* EMPTY / LOADING */
 
         .empty,
         .loading {
@@ -416,6 +454,8 @@
             box-shadow:
                 0 4px 18px rgba(0, 0, 0, 0.18);
         }
+
+        /* SPINNER */
 
         .spinner {
             width: 32px;
@@ -438,6 +478,8 @@
             }
         }
 
+        /* FOOTER */
+
         footer {
             padding: 30px;
 
@@ -448,6 +490,8 @@
             font-size: 13px;
             font-weight: 400;
         }
+
+        /* MASCOT */
 
         .mascot {
             position: fixed;
@@ -485,7 +529,14 @@
             object-fit: contain;
         }
 
+        /* MOBILE */
+
         @media (max-width: 600px) {
+
+            header {
+                padding: 25px 15px;
+            }
+
             header h1 {
                 font-size: 26px;
             }
@@ -498,6 +549,12 @@
 
             .tabs {
                 flex-wrap: wrap;
+            }
+
+            .tab-button,
+            .subtitle-button,
+            .sort-button {
+                font-size: 13px;
             }
 
             .game,
@@ -522,6 +579,15 @@
                 height: 105px;
             }
 
+            .game-name,
+            .movie-name {
+                font-size: 17px;
+            }
+
+            .description {
+                font-size: 13px;
+            }
+
             .mascot {
                 width: 140px;
                 height: 140px;
@@ -536,6 +602,7 @@
 
 <header>
 
+    <!-- MUSIC BUTTON -->
     <button
         class="music-button"
         id="musicButton"
@@ -544,8 +611,10 @@
         🎵 Музыка
     </button>
 
+    <!-- TITLE -->
     <h1>MIFIX — Games & Movies</h1>
 
+    <!-- SUBTITLE -->
     <button
         class="subtitle-button"
         id="subtitleBtn"
@@ -554,6 +623,7 @@
         Мой личный рейтинг игр
     </button>
 
+    <!-- COUNTER -->
     <div
         class="counter"
         id="counter"
@@ -561,6 +631,7 @@
         Загрузка...
     </div>
 
+    <!-- TABS -->
     <nav class="tabs">
 
         <button
@@ -585,6 +656,8 @@
 
 
 <main class="container">
+
+    <!-- GAMES -->
 
     <section
         class="tab-content active"
@@ -611,6 +684,8 @@
 
     </section>
 
+
+    <!-- MOVIES -->
 
     <section
         class="tab-content"
@@ -640,10 +715,14 @@
 </main>
 
 
+<!-- FOOTER -->
+
 <footer>
     © 2026 MIFIX
 </footer>
 
+
+<!-- MASCOT -->
 
 <a
     class="mascot"
@@ -659,6 +738,8 @@
 </a>
 
 
+<!-- BACKGROUND MUSIC -->
+
 <audio
     id="backgroundMusic"
     loop
@@ -671,29 +752,44 @@
 </audio>
 
 
+<!-- MUSIC SCRIPT -->
+
 <script>
     const music = document.getElementById("backgroundMusic");
     const musicButton = document.getElementById("musicButton");
 
     musicButton.addEventListener("click", async () => {
         try {
+
             if (music.paused) {
+
                 await music.play();
 
                 musicButton.textContent = "🔊 Музыка включена";
                 musicButton.classList.add("active");
+
             } else {
+
                 music.pause();
 
                 musicButton.textContent = "🎵 Музыка";
                 musicButton.classList.remove("active");
+
             }
+
         } catch (error) {
-            console.error("Не удалось запустить музыку:", error);
+
+            console.error(
+                "Не удалось запустить музыку:",
+                error
+            );
+
         }
     });
 </script>
 
+
+<!-- APP -->
 
 <script src="app.js"></script>
 
