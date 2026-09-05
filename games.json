@@ -13,15 +13,20 @@
         "image": "images/dead-by-daylight.jpg"
     },
     {
-        "name": "The Crew 2",
-        "rating": 1,
-        "steam": "https://store.steampowered.com/app/646910/The_Crew_2/",
-        "image": "images/gonka.jpg"
-    },
-    {
         "name": "Cult of the Lamb",
         "rating": 8,
         "image": "images/cult-of-the-lamb.jpg",
         "description": "Очень классная при первом прохождении. Самый, по моему мнению, лучший саундтрек в рогаликах — F RiverBoy"
+    },
+    {
+        "name": "Need for Speed Underground 2",
+        "rating": 7,
+        "image": "images/need-for-speed-underground-2.jpg"
+    },
+    {
+        "name": "The Crew 2",
+        "rating": 1,
+        "steam": "https://store.steampowered.com/app/646910/The_Crew_2/",
+        "image": "images/gonka.jpg"
     }
 ]
